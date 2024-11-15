@@ -39,6 +39,9 @@ class SiteChecker extends Command
                 }
             } catch (Exception $e) {
                 $this->error("❌ Erro ao verificar o site {$site->domain}: " . $e->getMessage());
+
+                $this->sendPushcutNotification($site->domain, $status);
+                $this->sendDiscordNotification($site->domain, $status);
             }
         }
     }
