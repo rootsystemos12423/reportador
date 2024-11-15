@@ -30,10 +30,16 @@ class SiteChecker extends Command
         
                 if ($status === 200) {
                     $this->info("✔️ Site ({$site->domain}) está acessível! Status: 200 OK");
-                } else {
-                    $this->warn("⚠️ Site ({$site->domain}) está offline ou retornou o status: $status");
+                } elseif ($status === 0) {
+                    $this->warn("⚠️ Site ({$site->domain}) está offline ou tem problema de SSL!");
         
-                    // Enviar notificações se o site estiver offline
+                    // Enviar notificações quando o site está offline ou com erro SSL
+                    $this->sendPushcutNotification($site->domain, $status);
+                    $this->sendDiscordNotification($site->domain, $status);
+                } else {
+                    $this->warn("⚠️ Site ({$site->domain}) retornou o status: $status");
+        
+                    // Enviar notificações para outros status não 200
                     $this->sendPushcutNotification($site->domain, $status);
                     $this->sendDiscordNotification($site->domain, $status);
                 }
@@ -51,30 +57,39 @@ class SiteChecker extends Command
      * Função para verificar o status HTTP do site.
      */
     private function checkSiteStatus($domain)
-    {
-        // Adiciona 'http://' caso não tenha sido informado
-        if (!str_starts_with($domain, 'http://') && !str_starts_with($domain, 'https://')) {
-            $domain = 'http://' . $domain;
-        }
-
-        try {
-            // Fazer a requisição HTTP para o domínio
-            $response = Http::timeout(5)->get($domain);
-
-            // Retorna o status HTTP
-            return $response->status();
-        } catch (\Illuminate\Http\Client\RequestException $e) {
-            // Verificar se o erro é relacionado ao certificado SSL
-            if (str_contains($e->getMessage(), 'cURL error 60')) {
-                $this->error("❌ Problema de certificado SSL para o site {$domain}: " . $e->getMessage());
-            } else {
-                $this->error("❌ Erro ao verificar o site {$domain}: " . $e->getMessage());
-            }
-            
-            // Retorna um código de status personalizado para indicar que o site está offline
-            return 0;
-        }
+{
+    // Adiciona 'http://' caso não tenha sido informado
+    if (!str_starts_with($domain, 'http://') && !str_starts_with($domain, 'https://')) {
+        $domain = 'http://' . $domain;
     }
+
+    try {
+        // Fazer a requisição HTTP para o domínio
+        $response = Http::timeout(5)->get($domain);
+
+        // Verifica se a resposta foi bem-sucedida
+        if ($response->successful()) {
+            return $response->status();
+        } else {
+            // Se a resposta não for 2xx, retornar o código de status
+            return $response->status();
+        }
+
+    } catch (\Illuminate\Http\Client\RequestException $e) {
+        // Verificar se o erro é relacionado ao certificado SSL
+        if (str_contains($e->getMessage(), 'cURL error 60')) {
+            $this->error("❌ Problema de certificado SSL para o site {$domain}: " . $e->getMessage());
+        } elseif (str_contains($e->getMessage(), 'cURL error')) {
+            // Erro genérico de cURL (rede, DNS, timeout, etc)
+            $this->error("❌ Erro ao verificar o site {$domain} (erro de rede): " . $e->getMessage());
+        } else {
+            $this->error("❌ Erro inesperado ao verificar o site {$domain}: " . $e->getMessage());
+        }
+
+        // Retorna o status 0 em caso de erro de rede ou SSL, indicando que o site está offline
+        return 0;
+    }
+}
 
 
     private function sendPushcutNotification($domain, $status)
