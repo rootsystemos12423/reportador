@@ -25,10 +25,10 @@ class SiteChecker extends Command
         foreach ($sites as $site) {
             $this->info("Verificando o domínio: {$site->domain}");
 
+            $status = $this->checkSiteStatus($site->domain);
+
             // Tentar verificar o status do site
             try {
-                $status = $this->checkSiteStatus($site->domain);
-                
                 if ($status === 200) {
                     $this->info("✔️ Site ({$site->domain}) está acessível! Status: 200 OK");
                 } else {
