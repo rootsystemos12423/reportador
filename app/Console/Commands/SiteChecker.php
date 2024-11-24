@@ -61,7 +61,7 @@ class SiteChecker extends Command
                 $this->info("Tentativa {$attempt} para verificar o domínio: {$domain}");
 
                 // Fazer a requisição HTTP para o domínio
-                $response = Http::timeout(5)->get($domain);
+                $response = Http::timeout(30)->get($domain);
 
                 // Verifica se a resposta foi bem-sucedida
                 if ($response->successful()) {
