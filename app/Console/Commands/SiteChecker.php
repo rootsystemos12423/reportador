@@ -63,33 +63,45 @@ class SiteChecker extends Command
         $domain = 'http://' . $domain;
     }
 
-    try {
-        // Fazer a requisição HTTP para o domínio
-        $response = Http::timeout(5)->get($domain);
+    $maxAttempts = 2; // Número máximo de tentativas
+    $attempt = 0;
 
-        // Verifica se a resposta foi bem-sucedida
-        if ($response->successful()) {
-            return $response->status();
-        } else {
-            // Se a resposta não for 2xx, retornar o código de status
-            return $response->status();
+    while ($attempt < $maxAttempts) {
+        try {
+            $attempt++;
+            $this->info("Tentativa {$attempt} para verificar o domínio: {$domain}");
+
+            // Fazer a requisição HTTP para o domínio
+            $response = Http::timeout(5)->get($domain);
+
+            // Verifica se a resposta foi bem-sucedida
+            if ($response->successful()) {
+                return $response->status();
+            } else {
+                // Se a resposta não for 2xx, retornar o código de status
+                return $response->status();
+            }
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            // Verificar se o erro é um timeout (cURL error 28)
+            if (str_contains($e->getMessage(), 'cURL error 28')) {
+                $this->warn("⏳ Timeout ao verificar o domínio: {$domain} (Tentativa {$attempt}).");
+
+                // Espera antes de tentar novamente
+                if ($attempt < $maxAttempts) {
+                    sleep(2); // Aguarda 2 segundos antes da próxima tentativa
+                } else {
+                    $this->error("❌ Falha final após {$maxAttempts} tentativas para o domínio: {$domain}");
+                    return 0; // Retorna 0 para indicar que o site está inacessível
+                }
+            } else {
+                // Trata outros erros
+                $this->error("❌ Erro ao verificar o site {$domain}: " . $e->getMessage());
+                return 0; // Retorna 0 para erros genéricos
+            }
         }
-
-    } catch (\Illuminate\Http\Client\RequestException $e) {
-        // Verificar se o erro é relacionado ao certificado SSL
-        if (str_contains($e->getMessage(), 'cURL error 60')) {
-            $this->error("❌ Problema de certificado SSL para o site {$domain}: " . $e->getMessage());
-        } elseif (str_contains($e->getMessage(), 'cURL error')) {
-            // Erro genérico de cURL (rede, DNS, timeout, etc)
-            $this->error("❌ Erro ao verificar o site {$domain} (erro de rede): " . $e->getMessage());
-        } else {
-            $this->error("❌ Erro inesperado ao verificar o site {$domain}: " . $e->getMessage());
-        }
-
-        // Retorna o status 0 em caso de erro de rede ou SSL, indicando que o site está offline
-        return 0;
     }
 }
+
 
 
     private function sendPushcutNotification($domain, $status)
