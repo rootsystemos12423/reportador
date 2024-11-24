@@ -50,6 +50,7 @@ class SiteChecker extends Command
                 $this->sendPushcutNotification($site->domain, 'Erro');
                 $this->sendDiscordNotification($site->domain, 'Erro');
             }
+            sleep(5);
         }
     }
 
