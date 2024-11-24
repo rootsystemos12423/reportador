@@ -25,32 +25,25 @@ class SiteChecker extends Command
         foreach ($sites as $site) {
             $this->info("Verificando o domínio: {$site->domain}");
         
-            try {
-                $status = $this->checkSiteStatus($site->domain);
+            $status = $this->checkSiteStatus($site->domain);
         
-                if ($status === 200) {
-                    $this->info("✔️ Site ({$site->domain}) está acessível! Status: 200 OK");
-                } elseif ($status === 0) {
-                    $this->warn("⚠️ Site ({$site->domain}) está offline ou tem problema de SSL!");
+            if ($status === 200) {
+                $this->info("✔️ Site ({$site->domain}) está acessível! Status: 200 OK");
+            } elseif ($status === 0) {
+                $this->warn("⚠️ Site ({$site->domain}) está offline após várias tentativas!");
         
-                    // Enviar notificações quando o site está offline ou com erro SSL
-                    $this->sendPushcutNotification($site->domain, $status);
-                    $this->sendDiscordNotification($site->domain, $status);
-                } else {
-                    $this->warn("⚠️ Site ({$site->domain}) retornou o status: $status");
+                // Enviar notificações quando o site está offline
+                $this->sendPushcutNotification($site->domain, $status);
+                $this->sendDiscordNotification($site->domain, $status);
+            } else {
+                $this->warn("⚠️ Site ({$site->domain}) retornou o status: $status");
         
-                    // Enviar notificações para outros status não 200
-                    $this->sendPushcutNotification($site->domain, $status);
-                    $this->sendDiscordNotification($site->domain, $status);
-                }
-            } catch (Exception $e) {
-                $this->error("❌ Erro inesperado ao verificar o site {$site->domain}: " . $e->getMessage());
-        
-                // Notificar sobre o erro
-                $this->sendPushcutNotification($site->domain, 'Erro');
-                $this->sendDiscordNotification($site->domain, 'Erro');
+                // Enviar notificações para outros status não 200
+                $this->sendPushcutNotification($site->domain, $status);
+                $this->sendDiscordNotification($site->domain, $status);
             }
         }
+        
     }
 
     /**
