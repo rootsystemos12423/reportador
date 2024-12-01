@@ -54,32 +54,48 @@ class EmailController extends Controller
     // Obter todas as configurações de e-mails cadastrados para envio
     $emailSenders = EmailConfig::all();
 
-    // Loop através de cada e-mail configurado como remetente
+    if ($emailSenders->isEmpty()) {
+        return redirect()->back()->with('error', 'Nenhuma configuração de e-mail disponível.');
+    }
+
+    $errors = []; // Armazena erros para exibição posterior
+
     foreach ($emailSenders as $senderConfig) {
-        // Configurar o envio utilizando cada remetente (IMAP configurado)
-        config([
-            'mail.mailers.smtp.host' => $senderConfig->smtp_host,
-            'mail.mailers.smtp.port' => $senderConfig->smtp_port,
-            'mail.mailers.smtp.username' => $senderConfig->smtp_user,
-            'mail.mailers.smtp.password' => $senderConfig->smtp_password,
-            'mail.mailers.smtp.encryption' => $senderConfig->smtp_encryption,
-            'mail.from.address' => $senderConfig->smtp_user,
-        ]);
+        // Criar um transporte SMTP personalizado
+        $transport = new \Swift_SmtpTransport($senderConfig->smtp_host, $senderConfig->smtp_port);
+        $transport->setUsername($senderConfig->smtp_user);
+        $transport->setPassword($senderConfig->smtp_password);
+        $transport->setEncryption($senderConfig->smtp_encryption);
+
+        // Criar um mailer com o transporte personalizado
+        $mailer = new \Swift_Mailer($transport);
 
         try {
-            // Enviar o e-mail usando o SMTP configurado com o corpo personalizado
-            Mail::raw($emailBody, function ($message) use ($destinatario, $senderConfig, $request) {
-                $message->to($destinatario)
-                        ->from($senderConfig->smtp_user)
-                        ->subject('Denúncia de Website - ' . $request->domain);
-            });
+
+            // Criar a mensagem
+            $message = (new \Swift_Message('Denúncia de Website - ' . $request->domain))
+                ->setFrom([$senderConfig->smtp_user => $senderConfig->smtp_user])
+                ->setTo($destinatario)
+                ->setBody($emailBody);
+
+            // Enviar o e-mail
+            $mailer->send($message);
+
+            Log::info("E-mail enviado com sucesso para {$destinatario} a partir de {$senderConfig->smtp_user}");
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', "Erro ao enviar e-mail a partir de '{$senderConfig->smtp_user}': " . $e->getMessage());
+            $errorMessage = "Erro ao enviar e-mail usando {$senderConfig->smtp_user}: " . $e->getMessage();
+            $errors[] = $errorMessage;
         }
+    }
+
+    if (!empty($errors)) {
+        return redirect()->back()->with('error', 'Alguns e-mails não foram enviados: ' . implode(', ', $errors));
     }
 
     return redirect()->back()->with('success', 'Denúncia enviada com sucesso.');
 }
+
+
 
     
 }
