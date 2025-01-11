@@ -60,6 +60,50 @@
             </form>
         </div>
 
+        <div class="p-6 bg-gray-50 shadow rounded-lg mt-8">
+            <h2 class="text-xl font-semibold mb-4">Cadastrar Links de Backup</h2>
+            <form action="{{ route('backup_links.store') }}" method="POST" class="space-y-6">
+                @csrf
+        
+                <!-- Nome do Link de Backup -->
+                <div>
+                    <label for="backup_landing_page" class="block text-sm font-medium text-gray-700">
+                        Selecionar Landing Page
+                    </label>
+                    <select name="landing_page_id" id="landing_page_id" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="" disabled selected>Selecione uma Landing Page</option>
+                        @foreach ($landingPages as $landingPage)
+                            <option value="{{ $landingPage->id }}">{{ $landingPage->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('backup_landing_page')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+        
+                <!-- URL do Link de Backup -->
+                <div>
+                    <label for="backup_url" class="block text-sm font-medium text-gray-700">
+                        URL do Link de Backup
+                    </label>
+                    <input type="url" name="backup_url" id="backup_url" placeholder="https://exemplo.com/backup"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    @error('backup_url')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+        
+                <!-- Botão de Enviar -->
+                <div class="flex justify-end">
+                    <button type="submit" 
+                            class="px-6 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 focus:outline-none">
+                        Cadastrar Link de Backup
+                    </button>
+                </div>
+            </form>
+        </div>
             <!-- Lista de Domínios Conectados -->
             <div>
                   <h2 class="text-xl font-medium mb-4">Domínios Conectados</h2>
@@ -76,7 +120,7 @@
                           </div>
                       @endforeach
                   </div>
-              </div>
+            </div>
               
       </div>
   </x-app-layout>

@@ -11,7 +11,7 @@ Route::get('/', [LandingPageController::class, 'show']);
 
 Route::get('/login', function () {
     return view('auth.login');
-});
+})->name('login');
 
 Route::middleware([
     'auth:sanctum',
@@ -38,4 +38,6 @@ Route::middleware([
 
     Route::get('/dashboard/landing', [LandingPageController::class, 'view'])->name('landing');
     Route::post('/landing/create', [LandingPageController::class, 'storeAndLanding'])->name('landing_pages.store');
+    Route::post('/landing/store/backup', [LandingPageController::class, 'storeBackupLinks'])->name('backup_links.store');
+
 });

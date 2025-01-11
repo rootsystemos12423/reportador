@@ -13,4 +13,9 @@ class LandingPage extends Model
     {
         return $this->hasOne(Domain::class);
     }
+
+    public function backupLinks()
+    {
+        return $this->hasMany(BackupLink::class);
+    }
 }
