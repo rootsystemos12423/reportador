@@ -30,7 +30,8 @@ class LandingPageController extends Controller
         }
 
         // Passar a URL da landing page para a view
-        return view('landing.index', ['landingPage' => $landingPage, 'url' => $landingPage->url]);
+
+        return view()->share('landingPage', $landingPage);
     }
 
 
