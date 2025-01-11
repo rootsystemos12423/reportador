@@ -17,7 +17,7 @@ class LandingPageController extends Controller
     public function show(Request $request)
     {
         // Obter o domínio da requisição
-        $domain = $request->getHost(); // Pega o domínio da URL (exemplo: futmantoss.com)
+        $domain = $request->getHost(); // Exemplo: futmantoss.com
 
         // Procurar a landing page associada a este domínio
         $landingPage = \App\Models\LandingPage::whereHas('domain', function ($query) use ($domain) {
@@ -29,10 +29,22 @@ class LandingPageController extends Controller
             abort(404, 'Landing Page não encontrada para este domínio');
         }
 
-        // Passar a URL da landing page para a view
+        // Construir o caminho para o arquivo Blade no sistema de arquivos
+        $templatePath = storage_path('app/public/landing_pages/' . $landingPage->domain->domain . '/index.blade.php');
 
-        return view()->share('landingPage', $landingPage);
+        // Verificar se o arquivo existe
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template não encontrado para esta landing page');
+        }
+
+        // Renderizar o template diretamente
+        return view()->file($templatePath, [
+            'landingPage' => $landingPage,
+            'dynamicUrl' => $landingPage->url ?? '/', // URL dinâmica
+        ]);
     }
+
+
 
 
     public function storeAndLanding(Request $request)
