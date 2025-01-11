@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\LandingPageController;
 
 
+Route::get('/', [LandingPageController::class, 'show']);
 
-Route::get('/', function () {
+Route::get('/login', function () {
     return view('auth.login');
 });
 
@@ -33,4 +35,7 @@ Route::middleware([
     Route::post('/email/send', [EmailController::class, 'sendDenunciaEmail'])->name('email.send');
     Route::delete('/email/config/{id}', [SiteController::class, 'destroyConfig'])->name('email.config.destroy');
 
+
+    Route::get('/dashboard/landing', [LandingPageController::class, 'view'])->name('landing');
+    Route::post('/landing/create', [LandingPageController::class, 'storeAndLanding'])->name('landing_pages.store');
 });
