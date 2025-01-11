@@ -24,6 +24,8 @@ class LandingPageController extends Controller
             $query->where('domain', $domain);
         })->first();
 
+        dd($domain, $landingPage);
+
         // Se não encontrar, retornar um erro 404
         if (!$landingPage) {
             abort(404, 'Landing Page não encontrada para este domínio');
