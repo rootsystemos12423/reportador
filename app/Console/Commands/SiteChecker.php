@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use App\Models\Site;
 use Illuminate\Support\Facades\Http;
 use Exception;
+use App\Models\BackupLink;
+
 
 class SiteChecker extends Command
 {
@@ -17,9 +19,10 @@ class SiteChecker extends Command
         // Obtém todos os sites cadastrados
         $sites = Site::all();
 
+
+
         if ($sites->isEmpty()) {
             $this->info('Nenhum site cadastrado.');
-            return;
         }
 
         foreach ($sites as $site) {
@@ -52,6 +55,61 @@ class SiteChecker extends Command
             }
             sleep(5);
         }
+
+
+        // Obtém todos os sites cadastrados
+        $backupLinks = BackupLink::all();
+
+        if ($backupLinks->isEmpty()) {
+            $this->info('Nenhum site cadastrado.');
+            return;
+        }
+
+        foreach ($backupLinks as $backupLink) {
+            $this->info("Verificando o domínio: {$backupLink->url}");
+        
+            try {
+                $status = $this->checkSiteStatus($backupLink->url);
+        
+                if ($status === 200) {
+                    $this->info("✔️ Site ({$backupLink->url}) está acessível! Status: 200 OK");
+                } elseif ($status === 404) {
+                    
+                    $backupLink->delete();
+
+                    $discordWebhookUrl = env('DISCORD_WEBHOOK');
+                    $message = "**⚠️⚠️⚠️ ALERTA BACKUP REMOVIDO SHOPIFY OFF ⚠️⚠️⚠️**\n\n" .
+                            "🔗 **Domínio**: {$backupLink->url}\n" .
+                            "❗ **Status HTTP**: {$status}\n" .
+                            "⏰ **Data/Hora**: " . now()->format('d/m/Y H:i:s');
+
+                    if (!$discordWebhookUrl) {
+                        $this->error("Webhook do Discord não configurado.");
+                        return;
+                    }
+
+                    $response = Http::post($discordWebhookUrl, [
+                        'content' => $message,
+                    ]);
+
+                } else {
+                    $this->warn("⚠️ Site ({$backupLink->url}) retornou o status: $status");
+        
+                    // Enviar notificações para outros status não 200
+                    $this->sendPushcutNotification($backupLink->url, $status);
+                    $this->sendDiscordNotification($backupLink->url, $status);
+                }
+            } catch (Exception $e) {
+                $this->error("❌ Erro inesperado ao verificar o site {$backupLink->url}: " . $e->getMessage());
+        
+                // Notificar sobre o erro
+                $this->sendPushcutNotification($backupLink->url, 'Erro');
+                $this->sendDiscordNotification($backupLink->url, 'Erro');
+            }
+            sleep(1);
+        }
+
+
     }
 
     /**
