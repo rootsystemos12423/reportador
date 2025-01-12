@@ -121,6 +121,29 @@
                       @endforeach
                   </div>
             </div>
+
+            <div class="mt-8">
+                <h2 class="text-xl font-medium mb-4">Links de Backup</h2>
+                <div class="space-y-4">
+                    @foreach ($backupLinks as $backupLink)
+                        <div class="bg-gray-50 shadow p-4 rounded-md">
+                            <h3 class="text-lg font-semibold text-gray-800">Landing Page: {{ $backupLink->landingPage->name }}</h3>
+                            <p class="text-sm text-gray-600">URL de Backup: {{ $backupLink->url }}</p>
+                            <p class="text-sm text-gray-600">Landing Page: {{ $backupLink->landingPage->name }}</p>
+                            <a href="{{ $backupLink->url }}" target="_blank"
+                               class="text-blue-600 hover:text-blue-800 text-sm underline">
+                                Visitar Backup
+                            </a>
+                            <form action="{{ route('delete.backup', $backupLink->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 ml-2 hover:text-red-800 text-sm underline">
+                                    Excluir
+                                </button>
+                            </form>                            
+                        </div>
+                    @endforeach
+                </div>
               
       </div>
   </x-app-layout>

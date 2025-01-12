@@ -12,7 +12,9 @@ class LandingPageController extends Controller
 
         $landingPages = \App\Models\LandingPage::all();
 
-        return view('landing', compact('landingPages'));
+        $backupLinks = BackupLink::all();
+
+        return view('landing', compact('landingPages', 'backupLinks'));
     }
 
 
@@ -110,5 +112,19 @@ class LandingPageController extends Controller
     // Redirecionar com mensagem de sucesso
     return redirect()->route('landing')->with('success', 'Domínio e Landing Page cadastrados com sucesso!');
 }
+
+
+public function destroyBackup($id)
+{
+    // Localizar a landing page pelo ID
+    $landingPage = BackupLink::findOrFail($id);
+
+    // Excluir o item
+    $landingPage->delete();
+
+    // Redirecionar de volta com uma mensagem de sucesso
+    return redirect()->route('landing')->with('success', 'Landing Page excluída com sucesso');
+}
+
 
 }
