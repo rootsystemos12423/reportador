@@ -34,7 +34,15 @@ class LandingPageController extends Controller
         // Construir o caminho para o arquivo Blade no sistema de arquivos
         $templatePath = storage_path('app/public/landing_pages/' . $landingPage->domain->domain . '/index.blade.php');
 
+        // Verificar se o parâmetro ?acesDirectPage está presente na URL
+        $isDirectPage = $request->has('acesDirectPage'); // Verifica se o parâmetro existe
+
         $dynamicUrl = BackupLink::where('landing_page_id', $landingPage->id)->first();
+
+        if ($isDirectPage && $dynamicUrl) {
+            // Verifica se existe um link dinâmico antes de redirecionar
+            return redirect()->to($dynamicUrl->url); // Supondo que o campo URL seja 'url'
+        }
 
         // Verificar se o arquivo existe
         if (!file_exists($templatePath)) {
@@ -47,6 +55,7 @@ class LandingPageController extends Controller
             'dynamicUrl' => $dynamicUrl, // URL dinâmica
         ]);
     }
+
 
 
     public function storeBackupLinks(Request $request)
