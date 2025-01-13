@@ -54,7 +54,7 @@ class LandingPageController extends Controller
         // Renderizar o template diretamente
         return view()->file($templatePath, [
             'landingPage' => $landingPage,
-            'dynamicUrl' => $dynamicUrl, // URL dinâmica
+            'dynamicUrl' => $dynamicUrl->url, // URL dinâmica
         ]);
     }
 
