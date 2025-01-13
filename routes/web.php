@@ -40,5 +40,6 @@ Route::middleware([
     Route::post('/landing/create', [LandingPageController::class, 'storeAndLanding'])->name('landing_pages.store');
     Route::post('/landing/store/backup', [LandingPageController::class, 'storeBackupLinks'])->name('backup_links.store');
     Route::delete('/landing-page/{id}', [LandingPageController::class, 'destroyBackup'])->name('delete.backup');
-
+    Route::get('/landing-pages/{id}/edit', [LandingPageController::class, 'edit'])->name('landingPages.edit');
+    Route::delete('/landing-pages/{id}', [LandingPageController::class, 'destroy'])->name('landingPages.destroy');
 });

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BackupLink;
+use Illuminate\Support\Facades\File;
+use App\Models\LandingPage;
 
 
 class LandingPageController extends Controller
@@ -15,6 +17,32 @@ class LandingPageController extends Controller
         $backupLinks = BackupLink::all();
 
         return view('landing', compact('landingPages', 'backupLinks'));
+    }
+
+    public function destroy($id)
+    {
+        // Buscar a landing page pelo ID
+        $landingPage = LandingPage::findOrFail($id);
+    
+        // Caminho do diretório da landing page no armazenamento
+        $directoryPath = storage_path('app/public/landing_pages/' . $landingPage->domain->domain);
+    
+        // Verificar se o diretório existe e deletá-lo
+        if (File::exists($directoryPath)) {
+            File::deleteDirectory($directoryPath);
+        }
+    
+        // Excluir a landing page do banco de dados
+        $landingPage->delete();
+    
+        // Redirecionar de volta com uma mensagem de sucesso
+        return redirect()->route('landing')->with('success', 'Landing Page e diretório excluídos com sucesso!');
+    }
+
+    public function edit($id)
+    {
+        $landingPage = LandingPage::findOrFail($id);
+        return view('landingPages.edit', compact('landingPage'));
     }
 
 

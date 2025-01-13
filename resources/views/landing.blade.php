@@ -106,21 +106,38 @@
         </div>
             <!-- Lista de Domínios Conectados -->
             <div>
-                  <h2 class="text-xl font-medium mb-4">Domínios Conectados</h2>
-                  <div class="space-y-4">
-                      @foreach ($landingPages as $landingPage)
-                          <div class="bg-gray-50 shadow p-4 rounded-md">
-                              <h3 class="text-lg font-semibold text-gray-800">{{ $landingPage->name }}</h3>
-                              <p class="text-sm text-gray-600">Domínio: {{ $landingPage->domain->domain ?? 'Não definido' }}</p>
-                              <p class="text-sm text-gray-600">Arquivo: {{ $landingPage->index_file_path }}</p>
-                              <a href="{{ $landingPage->domain->domain ?? 'Não definido' }}" target="_blank"
-                                 class="text-blue-600 hover:text-blue-800 text-sm underline">
-                                  Visitar
-                              </a>
-                          </div>
-                      @endforeach
-                  </div>
+                <h2 class="text-xl font-medium mb-4">Domínios Conectados</h2>
+                <div class="space-y-4">
+                    @foreach ($landingPages as $landingPage)
+                        <div class="bg-gray-50 shadow p-4 rounded-md">
+                            <h3 class="text-lg font-semibold text-gray-800">{{ $landingPage->name }}</h3>
+                            <p class="text-sm text-gray-600">Domínio: {{ $landingPage->domain->domain ?? 'Não definido' }}</p>
+                            <p class="text-sm text-gray-600">Arquivo: {{ $landingPage->index_file_path }}</p>
+                            <a href="{{ $landingPage->domain->domain ?? 'Não definido' }}" target="_blank"
+                            class="text-blue-600 hover:text-blue-800 text-sm underline">
+                                Visitar
+                            </a>
+                            <div class="flex items-center mt-2 space-x-4">
+                                <!-- Botão de Editar -->
+                                <a href="{{ route('landingPages.edit', $landingPage->id) }}"
+                                class="text-yellow-600 hover:text-yellow-800 text-sm underline">
+                                    Editar
+                                </a>
+                                <!-- Formulário de Exclusão -->
+                                <form action="{{ route('landingPages.destroy', $landingPage->id) }}" method="POST"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir esta Landing Page?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 text-sm underline">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
+
 
             <div class="mt-8">
                 <h2 class="text-xl font-medium mb-4">Links de Backup</h2>
