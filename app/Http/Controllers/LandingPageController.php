@@ -74,7 +74,7 @@ class LandingPageController extends Controller
             $templatePath = storage_path('app/public/'.$shopify->index_file_path.'');
             $content = file_get_contents($templatePath);
 
-            // Retorna o arquivo MHTML diretamente, com o tipo de conteúdo correto
+            // Força a exibição do conteúdo no navegador
             return response($content, 200)
                     ->header('Content-Type', 'multipart/related')
                     ->header('Content-Disposition', 'inline; filename="index.mhtml"');
@@ -163,14 +163,16 @@ public function storeShopifyLanding(Request $request, $id)
 {
     // Validação dos campos
     $request->validate([
-        'index_file' => 'required', // Máximo de 10 MB e tipos permitidos
+        'index_file' => 'required|mimes:zip', // Verifica que é um arquivo .zip
     ]);
+
 
     // Verificar se o backup_link_id é válido
     $backupLink = \App\Models\BackupLink::find($id);
     if (!$backupLink) {
         return redirect()->back()->with('error', 'Backup link não encontrado.');
     }
+
 
     // Criar o registro na tabela ShopifyIndex
     $shopifyIndex = \App\Models\ShopifyIndex::create([
@@ -179,20 +181,58 @@ public function storeShopifyLanding(Request $request, $id)
 
     // Gerar um nome único para o diretório
     $directoryName = uniqid('pressel_', true);
+    $directoryPath = storage_path("app/public/pressel/$directoryName");
 
-    // Armazenar o arquivo index.html
-    $path = $request->file('index_file')->storeAs(
-        "pressel/$directoryName",
-        'index.mhtml',
-        'public'
-    );
+    // Criação do diretório para armazenar os arquivos extraídos
+    if (!file_exists($directoryPath)) {
+        mkdir($directoryPath, 0777, true);
+    }
 
-    // Atualizar o registro com o caminho do arquivo
-    $shopifyIndex->update(['index_file_path' => $path]);
+    // Salvar o arquivo .zip na pasta temporária
+    $zipFile = $request->file('index_file');
+    $zipPath = $zipFile->storeAs('temp', 'index.zip', 'public');
 
-    // Redirecionar com mensagem de sucesso
-    return redirect()->route('landing')->with('success', 'Domínio e Landing Page cadastrados com sucesso!');
+    // Caminho absoluto para o arquivo .zip
+    $zipFilePath = storage_path('app/public/'.$zipPath);
+
+    // Usando a classe ZipArchive para descompactar o arquivo .zip
+    $zip = new \ZipArchive;
+    $res = $zip->open($zipFilePath);
+
+    if ($res === true) {
+
+        // Extrair os arquivos para o diretório de destino
+        $zip->extractTo($directoryPath);
+        $zip->close();
+
+
+        // Verificar se o arquivo index.html existe no diretório extraído
+        $indexFilePath = $directoryPath . '/index.html'; // Ajuste conforme o nome ou tipo do arquivo desejado
+
+
+        if (file_exists($indexFilePath)) {
+        
+            // Atualizar o caminho do arquivo no registro da ShopifyIndex
+            $shopifyIndex->update(['index_file_path' => $indexFilePath]);
+
+            // Verificar se o arquivo .zip temporário existe antes de tentar excluir
+            if (file_exists($zipFilePath)) {
+                if (unlink($zipFilePath)) {
+    
+                }
+            }
+            // Redirecionar com mensagem de sucesso
+            return redirect()->route('landing')->with('success', 'Domínio e Landing Page cadastrados com sucesso!');
+        } else {
+            // Se não encontrar o index.html, retornar erro
+            return redirect()->back()->with('error', 'O arquivo index.html não foi encontrado no arquivo .zip.');
+        }        
+    } else {
+        // Caso ocorra algum erro ao tentar abrir o arquivo .zip
+        return redirect()->back()->with('error', 'Erro ao descompactar o arquivo. Tente novamente.');
+    }
 }
+
 
 
 
