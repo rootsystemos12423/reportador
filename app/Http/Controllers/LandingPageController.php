@@ -112,7 +112,7 @@ class LandingPageController extends Controller
     // Validação dos campos
     $request->validate([
         'name' => 'required|string|max:255',
-        'index_file' => 'required|file|mimes:html|max:10240', // 10 MB
+        'index_file' => 'required', // 10 MB
         'domain' => 'required|unique:domains,domain',
     ]);
 
