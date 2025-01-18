@@ -151,16 +151,31 @@
                                class="text-blue-600 hover:text-blue-800 text-sm underline">
                                 Visitar Backup
                             </a>
+                            <!-- Formulário para exclusão -->
                             <form action="{{ route('delete.backup', $backupLink->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 ml-2 hover:text-red-800 text-sm underline">
                                     Excluir
                                 </button>
-                            </form>                            
+                            </form>
+                            
+                            <!-- Formulário para cadastrar nova index -->
+                            <form action="{{ route('shopify.store', $backupLink->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div>
+                                    <label for="index_file">Upload do arquivo index</label>
+                                    <input type="file" id="index_file" name="index_file" required>
+                                </div>
+                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+                                    Enviar
+                                </button>
+                            </form>
+                            
                         </div>
                     @endforeach
                 </div>
+                
               
       </div>
   </x-app-layout>

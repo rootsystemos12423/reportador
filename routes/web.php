@@ -42,4 +42,5 @@ Route::middleware([
     Route::delete('/landing-page/{id}', [LandingPageController::class, 'destroyBackup'])->name('delete.backup');
     Route::get('/landing-pages/{id}/edit', [LandingPageController::class, 'edit'])->name('landingPages.edit');
     Route::delete('/landing-pages/{id}', [LandingPageController::class, 'destroy'])->name('landingPages.destroy');
+    Route::post('/shopify/{id}/store', [LandingPageController::class, 'storeShopifyLanding'])->name('shopify.store');
 });

@@ -19,4 +19,9 @@ class BackupLink extends Model
     {
         return $this->belongsTo(LandingPage::class);
     }
+
+    public function shopifyIndexes()
+    {
+        return $this->hasMany(ShopifyIndex::class, 'backup_link_id');
+    }
 }

@@ -51,6 +51,7 @@ class LandingPageController extends Controller
         // Obter o domínio da requisição
         $domain = $request->getHost(); // Exemplo: futmantoss.com
 
+
         // Procurar a landing page associada a este domínio
         $landingPage = \App\Models\LandingPage::whereHas('domain', function ($query) use ($domain) {
             $query->where('domain', $domain);
@@ -61,13 +62,24 @@ class LandingPageController extends Controller
             abort(404, 'Landing Page não encontrada para este domínio');
         }
 
+        $dynamicUrl = BackupLink::where('landing_page_id', $landingPage->id)->first();
+
+        if (!$dynamicUrl) {
+            abort(404, 'Backup Link não cadastrado');
+        }
+
+        $shopify = \App\Models\ShopifyIndex::where('backup_link_id', $dynamicUrl->id);
+
+        if($shopify){
+            $templatePath = storage_path('app/public/'.$shopify->index_file_path.'');
+            return view()->file($templatePath);
+        }
+
         // Construir o caminho para o arquivo Blade no sistema de arquivos
         $templatePath = storage_path('app/public/landing_pages/' . $landingPage->domain->domain . '/index.blade.php');
 
         // Verificar se o parâmetro ?acesDirectPage está presente na URL
         $isDirectPage = $request->has('acesDirectPage'); // Verifica se o parâmetro existe
-
-        $dynamicUrl = BackupLink::where('landing_page_id', $landingPage->id)->first();
 
         if ($isDirectPage && $dynamicUrl) {
             // Verifica se existe um link dinâmico antes de redirecionar
@@ -140,6 +152,43 @@ class LandingPageController extends Controller
     // Redirecionar com mensagem de sucesso
     return redirect()->route('landing')->with('success', 'Domínio e Landing Page cadastrados com sucesso!');
 }
+
+
+public function storeShopifyLanding(Request $request, $id)
+{
+    // Validação dos campos
+    $request->validate([
+        'index_file' => 'required', // Máximo de 10 MB e tipos permitidos
+    ]);
+
+    // Verificar se o backup_link_id é válido
+    $backupLink = \App\Models\BackupLink::find($id);
+    if (!$backupLink) {
+        return redirect()->back()->with('error', 'Backup link não encontrado.');
+    }
+
+    // Criar o registro na tabela ShopifyIndex
+    $shopifyIndex = \App\Models\ShopifyIndex::create([
+        'backup_link_id' => $id,
+    ]);
+
+    // Gerar um nome único para o diretório
+    $directoryName = uniqid('pressel_', true);
+
+    // Armazenar o arquivo index.html
+    $path = $request->file('index_file')->storeAs(
+        "pressel/$directoryName",
+        'index.mhtml',
+        'public'
+    );
+
+    // Atualizar o registro com o caminho do arquivo
+    $shopifyIndex->update(['index_file_path' => $path]);
+
+    // Redirecionar com mensagem de sucesso
+    return redirect()->route('landing')->with('success', 'Domínio e Landing Page cadastrados com sucesso!');
+}
+
 
 
 public function destroyBackup($id)
