@@ -72,7 +72,12 @@ class LandingPageController extends Controller
 
         if($shopify){
             $templatePath = storage_path('app/public/'.$shopify->index_file_path.'');
-            return view()->file($templatePath);
+            $content = file_get_contents($templatePath);
+
+            // Retorna o arquivo MHTML diretamente, com o tipo de conteúdo correto
+            return response($content, 200)
+                    ->header('Content-Type', 'multipart/related')
+                    ->header('Content-Disposition', 'inline; filename="index.mhtml"');
         }
 
         // Construir o caminho para o arquivo Blade no sistema de arquivos
