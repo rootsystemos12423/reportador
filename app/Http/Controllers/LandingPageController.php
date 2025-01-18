@@ -68,7 +68,7 @@ class LandingPageController extends Controller
             abort(404, 'Backup Link não cadastrado');
         }
 
-        $shopify = \App\Models\ShopifyIndex::where('backup_link_id', $dynamicUrl->id);
+        $shopify = \App\Models\ShopifyIndex::where('backup_link_id', $dynamicUrl->id)->first();
 
         if($shopify){
             $templatePath = storage_path('app/public/'.$shopify->index_file_path.'');
