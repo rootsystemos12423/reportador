@@ -85,13 +85,19 @@ class LandingPageController extends Controller
                 $content = file_get_contents($indexFilePath);
         
                 // Ajustar os caminhos relativos
-                $baseUrl = url($directoryPath); // URL base para os recursos
+                $baseUrl = url('storage/pressel/' . basename($directoryPath)); // URL base para os recursos
                 $content = preg_replace(
                     '/(src)=["\'](?!http|\/\/)([^"\']+)["\']/', 
                     '$1="' . $baseUrl . '/$2"',
                     $content
                 );
         
+                $content = preg_replace(
+                    '/\/var\/www\/html\/reportador\/storage\/app\/public\//',
+                    '/storage/',
+                    $content
+                );
+
                 // Retornar o conteúdo ajustado
                 return response($content, 200)
                     ->header('Content-Type', 'text/html; charset=UTF-8')
