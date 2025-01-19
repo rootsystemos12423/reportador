@@ -14,9 +14,11 @@ class LandingPageController extends Controller
 
         $landingPages = \App\Models\LandingPage::all();
 
+        $shopify = \App\Models\ShopifyIndex::all();
+
         $backupLinks = BackupLink::all();
 
-        return view('landing', compact('landingPages', 'backupLinks'));
+        return view('landing', compact('landingPages', 'backupLinks', 'shopify'));
     }
 
     public function destroy($id)

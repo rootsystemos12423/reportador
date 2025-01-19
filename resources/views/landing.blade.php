@@ -161,6 +161,9 @@
                             </form>
                             
                             <!-- Formulário para cadastrar nova index -->
+                            @if($backupLink->shopifyIndexes)
+                            <span>{{ $backupLink->shopifyIndexes->index_file_path }}</span>
+                            @else
                             <form action="{{ route('shopify.store', $backupLink->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div>
@@ -171,6 +174,7 @@
                                     Enviar
                                 </button>
                             </form>
+                            @endif
                             
                         </div>
                     @endforeach

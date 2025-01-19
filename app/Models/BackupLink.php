@@ -22,6 +22,6 @@ class BackupLink extends Model
 
     public function shopifyIndexes()
     {
-        return $this->hasMany(ShopifyIndex::class, 'backup_link_id');
+        return $this->hasOne(ShopifyIndex::class, 'backup_link_id');
     }
 }
