@@ -81,8 +81,21 @@ class LandingPageController extends Controller
             $indexFilePath = $directoryPath; // Ajuste se necessário, caso o nome ou tipo do arquivo seja diferente
 
             if (file_exists($indexFilePath)) {
-                // Forçar a exibição do conteúdo no navegador
-               return view()->file($indexFilePath);
+                // Ler o conteúdo do arquivo index.html
+                $content = file_get_contents($indexFilePath);
+        
+                // Ajustar os caminhos relativos
+                $baseUrl = url($directoryPath); // URL base para os recursos
+                $content = preg_replace(
+                    '/(src)=["\'](?!http|\/\/)([^"\']+)["\']/', 
+                    '$1="' . $baseUrl . '/$2"',
+                    $content
+                );
+        
+                // Retornar o conteúdo ajustado
+                return response($content, 200)
+                    ->header('Content-Type', 'text/html; charset=UTF-8')
+                    ->header('Content-Disposition', 'inline; filename="index.html"');
             } else {
                 // Se o arquivo index.html não existir no diretório descompactado
                 return response('O arquivo index.html não foi encontrado.', 404);
