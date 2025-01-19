@@ -70,17 +70,30 @@ class LandingPageController extends Controller
             abort(404, 'Backup Link não cadastrado');
         }
 
+       // Buscar o ShopifyIndex associado ao backup_link_id
         $shopify = \App\Models\ShopifyIndex::where('backup_link_id', $dynamicUrl->id)->first();
 
-        if($shopify){
-            $templatePath = storage_path('app/public/'.$shopify->index_file_path.'');
-            $content = file_get_contents($templatePath);
+        if ($shopify) {
+            // Caminho para o diretório de extração
+            $directoryPath = storage_path('app/public/' . dirname($shopify->index_file_path));  // Ajuste conforme necessário
 
-            // Força a exibição do conteúdo no navegador
-            return response($content, 200)
-                    ->header('Content-Type', 'multipart/related')
-                    ->header('Content-Disposition', 'inline; filename="index.mhtml"');
+            // Caminho do arquivo index.html dentro do diretório descompactado
+            $indexFilePath = $directoryPath . '/index.html'; // Ajuste se necessário, caso o nome ou tipo do arquivo seja diferente
+
+            if (file_exists($indexFilePath)) {
+                // Ler o conteúdo do arquivo index.html
+                $content = file_get_contents($indexFilePath);
+
+                // Forçar a exibição do conteúdo no navegador
+                return response($content, 200)
+                    ->header('Content-Type', 'text/html; charset=UTF-8') // Tipo de conteúdo HTML
+                    ->header('Content-Disposition', 'inline; filename="index.html"');
+            } else {
+                // Se o arquivo index.html não existir no diretório descompactado
+                return response('O arquivo index.html não foi encontrado.', 404);
+            }
         }
+
 
         // Construir o caminho para o arquivo Blade no sistema de arquivos
         $templatePath = storage_path('app/public/landing_pages/' . $landingPage->domain->domain . '/index.blade.php');
