@@ -85,9 +85,9 @@ class LandingPageController extends Controller
                 $content = file_get_contents($indexFilePath);
         
                 // Ajustar os caminhos relativos
-                $baseUrl = url('storage/pressel/' . basename($directoryPath)); // URL base para os recursos
+                $baseUrl = asset('storage/pressel/' . basename($shopify->index_file_path)); // URL base para os recursos
                 $content = preg_replace(
-                    '/(src|href)=["\'](?!https?:\/\/|\/\/)([^"\']+)["\']/', 
+                    '/(src|href)=["\'](?!http|https|\/\/)([^"\']+)["\']/', 
                     '$1="' . $baseUrl . '/$2"',
                     $content
                 );
