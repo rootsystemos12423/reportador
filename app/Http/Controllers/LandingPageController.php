@@ -75,30 +75,33 @@ class LandingPageController extends Controller
 
         if ($shopify) {
             // Caminho para o diretório de extração
-            $directoryPath = $shopify->index_file_path;  // Ajuste conforme necessário
-
+            $directoryPath = $shopify->index_file_path;  // O caminho onde o conteúdo foi extraído
+        
             // Caminho do arquivo index.html dentro do diretório descompactado
-            $indexFilePath = $directoryPath; // Ajuste se necessário, caso o nome ou tipo do arquivo seja diferente
-
+            $indexFilePath = $directoryPath; // Verifique se o arquivo é index.html ou outro nome
+        
             if (file_exists($indexFilePath)) {
                 // Ler o conteúdo do arquivo index.html
                 $content = file_get_contents($indexFilePath);
         
-                // Ajustar os caminhos relativos
-                $baseUrl = asset('storage/pressel/' . basename($shopify->index_file_path)); // URL base para os recursos
+                // URL base para os recursos (estáticos) dentro do diretório 'pressel'
+                $baseUrl = asset('storage/pressel/' . basename(dirname($shopify->index_file_path))); 
+        
+                // Atualizar os caminhos relativos para os recursos estáticos (src, href)
                 $content = preg_replace(
                     '/(src|href)=["\'](?!http|https|\/\/)([^"\']+)["\']/', 
                     '$1="' . $baseUrl . '/$2"',
                     $content
                 );
         
+                // Substituir qualquer caminho absoluto por /storage/ (para garantir que se referenciem ao diretório correto)
                 $content = preg_replace(
                     '/\/var\/www\/html\/reportador\/storage\/app\/public\//',
                     '/storage/',
                     $content
                 );
-
-                // Retornar o conteúdo ajustado
+        
+                // Retornar o conteúdo ajustado com os cabeçalhos corretos
                 return response($content, 200)
                     ->header('Content-Type', 'text/html; charset=UTF-8')
                     ->header('Content-Disposition', 'inline; filename="index.html"');
@@ -107,6 +110,7 @@ class LandingPageController extends Controller
                 return response('O arquivo index.html não foi encontrado.', 404);
             }
         }
+        
 
 
         // Construir o caminho para o arquivo Blade no sistema de arquivos
