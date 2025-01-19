@@ -75,7 +75,7 @@ class LandingPageController extends Controller
 
         if ($shopify) {
             // Caminho para o diretório de extração
-            $directoryPath = storage_path('app/public/' . dirname($shopify->index_file_path));  // Ajuste conforme necessário
+            $directoryPath = $shopify->index_file_path;  // Ajuste conforme necessário
 
             // Caminho do arquivo index.html dentro do diretório descompactado
             $indexFilePath = $directoryPath . '/index.html'; // Ajuste se necessário, caso o nome ou tipo do arquivo seja diferente
