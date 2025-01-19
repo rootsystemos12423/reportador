@@ -87,7 +87,7 @@ class LandingPageController extends Controller
                 // Ajustar os caminhos relativos
                 $baseUrl = url('storage/pressel/' . basename($directoryPath)); // URL base para os recursos
                 $content = preg_replace(
-                    '/(src)=["\'](?!http|\/\/)([^"\']+)["\']/', 
+                    '/(src|href)=["\'](?!https?:\/\/|\/\/)([^"\']+)["\']/', 
                     '$1="' . $baseUrl . '/$2"',
                     $content
                 );
