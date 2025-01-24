@@ -116,14 +116,6 @@ class LandingPageController extends Controller
         // Construir o caminho para o arquivo Blade no sistema de arquivos
         $templatePath = storage_path('app/public/landing_pages/' . $landingPage->domain->domain . '/index.blade.php');
 
-        // Verificar se o parâmetro ?acesDirectPage está presente na URL
-        $isDirectPage = $request->has('acesDirectPage'); // Verifica se o parâmetro existe
-
-        if ($isDirectPage && $dynamicUrl) {
-            // Verifica se existe um link dinâmico antes de redirecionar
-            return redirect()->to($dynamicUrl->url); // Supondo que o campo URL seja 'url'
-        }
-
         // Verificar se o arquivo existe
         if (!file_exists($templatePath)) {
             abort(404, 'Template não encontrado para esta landing page');
