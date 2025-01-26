@@ -34,20 +34,33 @@
                         required>
                     </div>
 
+                    <div class="mb-6">
+                        <label for="brand" class="block text-gray-700 font-medium mb-2">Marca:</label>
+                        <input type="text" name="brand" id="brand" placeholder="Nome Da Marca"
+                        class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        required>
+                    </div>
+
                     <!-- Motivo da Denúncia -->
                     <div class="mb-6">
                         <label for="reason" class="block text-gray-700 font-medium mb-2">Motivo da Denúncia:</label>
                         <textarea name="reason" id="reason" rows="4" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-Prezada, 
-Venho por meio deste e-mail reportar um site hospedado por vocês que aparenta estar envolvido em atividades fraudulentas. O site em questão é {site_url}, e há indícios de que ele está sendo utilizado para enganar e lesar consumidores.
-Abaixo estão algumas informações que indicam atividades suspeitas ou fraudulentas:
-Produtos ou serviços com preços irreais ou excessivamente baixos, o que frequentemente é usado para atrair vítimas.
-Ausência de informações de contato confiáveis, dificultando a comunicação e a solução de possíveis problemas.
-Relatos de consumidores na internet (se houver, você pode incluir links ou referências) indicando que o site pode ser um golpe.
-Domínio diferente do real site da marca
-Essas atividades sugerem que o site {site_url} pode estar desrespeitando os Termos de Serviço da Hostinger, além de representar um risco para os usuários.
-Peço que considerem investigar o site e, se constatada qualquer violação, tomem as devidas providências para proteger o público.
-Agradeço pela atenção e coloco-me à disposição para fornecer mais informações, caso necessário.</textarea>
+                            Reporter's Name: Diego Daminelli Lopes
+                            Reporter's Email Address: ip-violations-report@brandmonitor.com.br
+                            Reporter's Company Name: BRANDMONITOR SERVICOS ONLINE LTDA
+                            Reporter's Telephone Number: 21999185056
+
+                            Reported URLs:
+                            {site_url}
+                            
+                            Original Work: Trademarked Symbol: {brand}
+                            Registration Number: 900411724, 821285815
+                            Registration Office: INPI
+                            Logs or Evidence of Abuse: The reported website improperly uses the “{brand}” logo on its navigation bar and features a design that misleadingly suggests it is the official site, potentially confusing users. Additionally, it offers products at significantly low prices, engaging in fraudulent activities by selling without delivering them to buyers.
+                            
+                            Fraudulent website:  {site_url}
+                            We declare that the official website of “{brand}” is https://www.kikocosmetics.com/pt-pt/, and no other online channel is officially associated with the brand.
+                            Please note that {brand} is duly registered with INPI: 900411724, 821285815 "</textarea>
                     </div>
 
                     <!-- Botão de Envio -->
@@ -79,46 +92,8 @@ Agradeço pela atenção e coloco-me à disposição para fornecer mais informa�
                     <!-- Endereço de E-mail -->
                     <div class="mb-6">
                         <label for="email" class="block text-gray-700 font-medium mb-2">Endereço de E-mail:</label>
-                        <input type="email" name="email" id="email" placeholder="seu-email@dominio.com"
+                        <input type="text" name="email" id="email" placeholder="seu-email@dominio.com"
                                class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                    </div>
-                
-                    <!-- Servidor SMTP -->
-                    <div class="mb-6">
-                        <label for="smtp_host" class="block text-gray-700 font-medium mb-2">Servidor SMTP:</label>
-                        <input type="text" name="smtp_host" id="smtp_host" placeholder="smtp.seudominio.com" value="smtp.hostinger.com"
-                               class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                    </div>
-                
-                    <!-- Porta SMTP -->
-                    <div class="mb-6">
-                        <label for="smtp_port" class="block text-gray-700 font-medium mb-2">Porta SMTP:</label>
-                        <input type="number" name="smtp_port" id="smtp_port" placeholder="465" value="465"
-                               class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                    </div>
-                
-                    <!-- Usuário SMTP -->
-                    <div class="mb-6">
-                        <label for="smtp_user" class="block text-gray-700 font-medium mb-2">Usuário SMTP (E-mail):</label>
-                        <input type="email" name="smtp_user" id="smtp_user" placeholder="seu-email@dominio.com"
-                               class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                    </div>
-                
-                    <!-- Senha SMTP -->
-                    <div class="mb-6">
-                        <label for="smtp_password" class="block text-gray-700 font-medium mb-2">Senha SMTP:</label>
-                        <input type="password" name="smtp_password" id="smtp_password" placeholder="Senha do E-mail"
-                               class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                    </div>
-                
-                    <!-- Tipo de Criptografia SMTP -->
-                    <div class="mb-6">
-                        <label for="smtp_encryption" class="block text-gray-700 font-medium mb-2">Tipo de Criptografia:</label>
-                        <select name="smtp_encryption" id="smtp_encryption" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                            <option value="tls">TLS</option>
-                            <option value="ssl" selected>SSL</option>
-                            <option value="none">Nenhum</option>
-                        </select>
                     </div>
                 
                     <!-- Botão de Envio -->
