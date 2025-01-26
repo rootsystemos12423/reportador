@@ -188,16 +188,14 @@ public function storeShopifyLanding(Request $request, $id)
 {
     // Validação dos campos
     $request->validate([
-        'index_file' => 'required|mimes:zip', // Verifica que é um arquivo .zip
+        'index_file' => 'required|mimes:zip|max:20480', // Aceita arquivos .zip até 20MB (20480 KB)
     ]);
-
 
     // Verificar se o backup_link_id é válido
     $backupLink = \App\Models\BackupLink::find($id);
     if (!$backupLink) {
         return redirect()->back()->with('error', 'Backup link não encontrado.');
     }
-
 
     // Criar o registro na tabela ShopifyIndex
     $shopifyIndex = \App\Models\ShopifyIndex::create([
@@ -225,27 +223,22 @@ public function storeShopifyLanding(Request $request, $id)
     $res = $zip->open($zipFilePath);
 
     if ($res === true) {
-
         // Extrair os arquivos para o diretório de destino
         $zip->extractTo($directoryPath);
         $zip->close();
 
-
         // Verificar se o arquivo index.html existe no diretório extraído
         $indexFilePath = $directoryPath . '/index.html'; // Ajuste conforme o nome ou tipo do arquivo desejado
 
-
         if (file_exists($indexFilePath)) {
-        
             // Atualizar o caminho do arquivo no registro da ShopifyIndex
             $shopifyIndex->update(['index_file_path' => $indexFilePath]);
 
-            // Verificar se o arquivo .zip temporário existe antes de tentar excluir
+            // Remover o arquivo .zip temporário, se existir
             if (file_exists($zipFilePath)) {
-                if (unlink($zipFilePath)) {
-    
-                }
+                unlink($zipFilePath);
             }
+
             // Redirecionar com mensagem de sucesso
             return redirect()->route('landing')->with('success', 'Domínio e Landing Page cadastrados com sucesso!');
         } else {
@@ -257,7 +250,6 @@ public function storeShopifyLanding(Request $request, $id)
         return redirect()->back()->with('error', 'Erro ao descompactar o arquivo. Tente novamente.');
     }
 }
-
 
 
 
