@@ -92,7 +92,12 @@ class SiteChecker extends Command
                         'content' => $message,
                     ]);
 
-                } else {
+                }
+                elseif ($status === 403) {
+                    
+                
+                }
+                else {
                     $this->warn("⚠️ Site ({$backupLink->url}) retornou o status: $status");
         
                     // Enviar notificações para outros status não 200
