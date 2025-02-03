@@ -11,7 +11,7 @@ class DomainController extends Controller
 {
     // Validação do domínio
     $request->validate([
-        'domain' => 'required|url|unique:domains,domain|max:255',
+        'domain' => 'required|unique:domains,domain|max:255',
     ]);
 
     // Criar um novo domínio

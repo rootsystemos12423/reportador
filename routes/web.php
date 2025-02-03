@@ -58,11 +58,12 @@ Route::middleware([
     Route::post('/dashboard/whiterabbit/domain/store', [DomainController::class, 'store'])->name('store.rabbit.domain');
     Route::post('/dashboard/whiterabbit/campaign/store', [CampaignController::class, 'store'])->name('store.rabbit.campaign');
 
-    Route::get('/{id}', [WhiteRabbitController::class, 'cloacker'])->name('cloacker.rabbit');
-    Route::get('/{id}/safe', [WhiteRabbitController::class, 'safePage'])->name('cloacker.rabbit.safe');
-
     Route::get('/dashboard/whiterabbit/request/{id}', [WhiteRabbitController::class, 'RequestShow'])->name('cloacker.rabbit.request.show');
 
     Route::get('/dashboard/whiterabbit/rules', [WhiteRabbitController::class, 'rules'])->name('view.rabbit.rules');
     Route::post('/dashboard/whiterabbit/rules/store', [WhiteRabbitController::class, 'storeRule'])->name('store.rabbit.rules');
 });
+
+
+Route::get('/{id}', [WhiteRabbitController::class, 'cloacker'])->name('cloacker.rabbit');
+Route::get('/{id}/safe', [WhiteRabbitController::class, 'safePage'])->name('cloacker.rabbit.safe');
