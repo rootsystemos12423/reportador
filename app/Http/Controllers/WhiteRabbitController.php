@@ -82,9 +82,7 @@ class WhiteRabbitController extends Controller
         $domain = $request->getHost();
         $safePage = "https://{$domain}/{$id}/safe";
 
-       // $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
-
-       $ip = '66.102.6.133';
+       $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
 
         $apiUrl = "http://ip-api.com/json/{$ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query";
 
@@ -136,6 +134,15 @@ class WhiteRabbitController extends Controller
             RequestLog::where('ip', $ip)->latest()->first()->update([
                 'allowed' => false,
                 'reason' => 'Missing xId'
+            ]);
+        
+            return redirect()->to($safePage);
+        }
+
+        if ($xid !== $campaign->xid) {
+            RequestLog::where('ip', $ip)->latest()->first()->update([
+                'allowed' => false,
+                'reason' => 'Xid Invalid'
             ]);
         
             return redirect()->to($safePage);
@@ -251,32 +258,39 @@ class WhiteRabbitController extends Controller
 
 private function checkRule($data)
 {
-    $rules = Rule::all(); 
+    $rules = Rule::all();
 
     foreach ($rules as $rule) {
-        // Checar se o tipo de condição é válido
+        $values = $this->decodeValues($rule->values);
+
         switch ($rule->condition_type) {
             case 'isp':
-                if (isset($data['isp']) && $this->checkCondition($data['isp'], $rule->condition_operator, $this->decodeValues($rule->values))) {
-                    return $rule; // Retorna a regra que foi atendida
+                if (isset($data['isp']) && $this->checkCondition($data['isp'], $rule->condition_operator, $values)) {
+                    return $rule;
                 }
                 break;
 
             case 'ip':
-                if (isset($data['ip']) && $this->checkCondition($data['ip'], $rule->condition_operator, $this->decodeValues($rule->values))) {
-                    return $rule; // Retorna a regra que foi atendida
+                if (isset($data['ip']) && $this->checkCondition($data['ip'], $rule->condition_operator, $values)) {
+                    return $rule;
                 }
                 break;
 
             case 'asn':
-                if (isset($data['asn']) && $this->checkCondition($data['asn'], $rule->condition_operator, $this->decodeValues($rule->values))) {
-                    return $rule; // Retorna a regra que foi atendida
+                if (isset($data['asn']) && $this->checkCondition($data['asn'], $rule->condition_operator, $values)) {
+                    return $rule;
                 }
                 break;
 
             case 'user-agent':
-                if (isset($data['user_agent']) && $this->checkCondition($data['user_agent'], $rule->condition_operator, $this->decodeValues($rule->values))) {
-                    return $rule; // Retorna a regra que foi atendida
+                if (isset($data['user_agent']) && $this->checkCondition($data['user_agent'], $rule->condition_operator, $values)) {
+                    return $rule;
+                }
+                break;
+
+            case 'reverse-dns':
+                if (isset($data['reverse_dns']) && $this->checkCondition($data['reverse_dns'], $rule->condition_operator, $values)) {
+                    return $rule;
                 }
                 break;
 
@@ -285,7 +299,6 @@ private function checkRule($data)
         }
     }
 
-    // Caso contrário, retorna null
     return null;
 }
 
@@ -393,7 +406,7 @@ public function storeRule(Request $request)
         // Validação dos campos
         $request->validate([
             'action' => 'required|in:block,allow',
-            'condition_type' => 'required|in:isp,ip,asn,user-agent',
+            'condition_type' => 'required|in:isp,ip,asn,user-agent,reverse-dns', // Adicionado reverse-dns
             'condition_operator' => 'required|in:equal,contains,different',
             'values' => 'required|json',
         ]);
@@ -421,7 +434,7 @@ public function storeRule(Request $request)
     } catch (\Exception $e) {
         // Log de erro
         Log::error('Erro ao criar a regra de bloqueio.', [
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->id ?? 'guest',
             'error_message' => $e->getMessage(),
             'request_data' => $request->all(),
         ]);
@@ -430,6 +443,7 @@ public function storeRule(Request $request)
         return redirect()->back()->with('error', 'Ocorreu um erro ao adicionar a regra.');
     }
 }
+
 
 
 }

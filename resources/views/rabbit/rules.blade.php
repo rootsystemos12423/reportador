@@ -33,14 +33,15 @@
                 
                   {{-- Seletor de Tipo de Regra --}}
                   <div>
-                      <label class="block text-gray-300 mb-2">Tipo de Regra</label>
-                      <select name="condition_type" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white">
-                          <option value="isp">ISP</option>
-                          <option value="ip">IP</option>
-                          <option value="asn">ASN</option>
-                          <option value="user-agent">User-Agent</option>
-                      </select>
-                  </div>
+                    <label class="block text-gray-300 mb-2">Tipo de Regra</label>
+                    <select name="condition_type" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white">
+                        <option value="isp">ISP</option>
+                        <option value="ip">IP</option>
+                        <option value="asn">ASN</option>
+                        <option value="user-agent">User-Agent</option>
+                        <option value="reverse-dns">Reverse DNS</option> <!-- Nova opção adicionada -->
+                    </select>
+                </div>                
                 
                   {{-- Campo para Inserir o Valor --}}
                   <div x-data="ruleHandler()" class="space-y-4">
