@@ -5,7 +5,9 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LandingPageController;
-
+use App\Http\Controllers\WhiteRabbitController;
+use App\Http\Controllers\DomainController;
+use App\Http\Controllers\CampaignController;
 
 Route::get('/', [LandingPageController::class, 'show']);
 
@@ -43,4 +45,24 @@ Route::middleware([
     Route::get('/landing-pages/{id}/edit', [LandingPageController::class, 'edit'])->name('landingPages.edit');
     Route::delete('/landing-pages/{id}', [LandingPageController::class, 'destroy'])->name('landingPages.destroy');
     Route::post('/shopify/{id}/store', [LandingPageController::class, 'storeShopifyLanding'])->name('shopify.store');
+
+
+    // WHITE RABBIT
+
+    Route::get('/dashboard/whiterabbit', [WhiteRabbitController::class, 'dashboard'])->name('view.rabbit');
+    Route::get('/dashboard/whiterabbit/domains', [WhiteRabbitController::class, 'domains'])->name('view.rabbit.domains');
+    Route::get('/dashboard/whiterabbit/campaigns', [WhiteRabbitController::class, 'campaigns'])->name('view.rabbit.campaigns');
+    Route::get('/dashboard/whiterabbit/requests', [WhiteRabbitController::class, 'requests'])->name('view.rabbit.requests');
+    Route::get('/dashboard/whiterabbit/campaign', [WhiteRabbitController::class, 'campaign'])->name('view.rabbit.campaign');
+
+    Route::post('/dashboard/whiterabbit/domain/store', [DomainController::class, 'store'])->name('store.rabbit.domain');
+    Route::post('/dashboard/whiterabbit/campaign/store', [CampaignController::class, 'store'])->name('store.rabbit.campaign');
+
+    Route::get('/{id}', [WhiteRabbitController::class, 'cloacker'])->name('cloacker.rabbit');
+    Route::get('/{id}/safe', [WhiteRabbitController::class, 'safePage'])->name('cloacker.rabbit.safe');
+
+    Route::get('/dashboard/whiterabbit/request/{id}', [WhiteRabbitController::class, 'RequestShow'])->name('cloacker.rabbit.request.show');
+
+    Route::get('/dashboard/whiterabbit/rules', [WhiteRabbitController::class, 'rules'])->name('view.rabbit.rules');
+    Route::post('/dashboard/whiterabbit/rules/store', [WhiteRabbitController::class, 'storeRule'])->name('store.rabbit.rules');
 });
