@@ -24,7 +24,7 @@ class WhiteRabbitController extends Controller
     // Consultar os dados de requests dos últimos 15 dias agrupados por data
     $requests = RequestLog::selectRaw('DATE(created_at) as date, count(*) as total_requests, 
             sum(CASE WHEN allowed = 0 THEN 1 ELSE 0 END) as safe_page,
-            sum(CASE WHEN allowed = 1 THEN 0 ELSE 0 END) as offer_page')
+            sum(CASE WHEN allowed = 1 THEN 1 ELSE 0 END) as offer_page') // Corrigido aqui
         ->where('created_at', '>=', now()->subDays(15)) // Filtra os últimos 15 dias
         ->groupBy('date')
         ->orderBy('date', 'asc')
@@ -210,9 +210,12 @@ class WhiteRabbitController extends Controller
             'reason' => 'Acess Granted'
         ]);
 
-        dd([
-            'geoData' => $geoData
-        ]);
+        $offerPages = json_decode($campaign->offer_pages, true);
+
+        // Verifica se há pelo menos um link válido no array
+        if (!empty($offerPages) && is_array($offerPages)) {
+            return redirect()->to($offerPages[0]); // Redireciona para o primeiro link
+        }
 
         // Retorna os dados obtidos para debug
         abort(403, 'WORKING');
