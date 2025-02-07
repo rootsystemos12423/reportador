@@ -11,7 +11,7 @@ class LandingPage extends Model
 
     public function domain()
     {
-        return $this->hasOne(Domain::class)->onDelete('cascade');
+        return $this->hasOne(Domain::class);
     }
 
     public function backupLinks()
