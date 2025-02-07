@@ -228,8 +228,6 @@ class WhiteRabbitController extends Controller
             'reason' => 'Acess Granted'
         ]);
 
-        dd($request);
-
         $offerPages = json_decode($campaign->offer_pages, true);
 
         // Verifica se há pelo menos um link válido no array
