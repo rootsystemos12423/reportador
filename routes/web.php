@@ -57,6 +57,10 @@ Route::middleware([
 
     Route::post('/dashboard/whiterabbit/domain/store', [DomainController::class, 'store'])->name('store.rabbit.domain');
     Route::post('/dashboard/whiterabbit/campaign/store', [CampaignController::class, 'store'])->name('store.rabbit.campaign');
+    Route::get('/dashboard/whiterabbit/campaign/delete/{id}', [CampaignController::class, 'campaignDelete'])->name('delete.rabbit.campaign');
+    Route::get('/dashboard/whiterabbit/campaign/edit/{id}', [CampaignController::class, 'campaignEdit'])->name('edit.rabbit.campaign');
+    Route::post('/dashboard/whiterabbit/campaign/edit/update', [CampaignController::class, 'campaignEditUpdate'])->name('update.rabbit.campaign');
+
 
     Route::get('/dashboard/whiterabbit/request/{id}', [WhiteRabbitController::class, 'RequestShow'])->name('cloacker.rabbit.request.show');
 

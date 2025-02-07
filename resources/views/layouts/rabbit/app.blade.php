@@ -64,6 +64,8 @@
                 <h2 class="text-2xl font-bold">@yield('title')</h2>
                 @if(request()->routeIs('view.rabbit.campaign'))
                 <button  id="SubmitForm" class="bg-purple-600 px-4 py-2 rounded-2xl text-white font-bold text-lg items-center flex"><i class="fa-regular fa-floppy-disk mr-2 text-2xl"></i> SAVE</button>
+                @elseif(request()->routeIs('edit.rabbit.campaign'))
+                <button  id="SubmitForm" class="bg-purple-600 px-4 py-2 rounded-2xl text-white font-bold text-lg items-center flex"><i class="fa-regular fa-floppy-disk mr-2 text-2xl"></i> SAVE</button>
                 @elseif(request()->routeIs('view.rabbit.domains'))
                 <div x-data="{ showModal: false }">
                     <!-- Botão para abrir o modal -->

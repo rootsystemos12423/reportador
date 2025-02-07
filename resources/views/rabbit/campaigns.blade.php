@@ -105,8 +105,12 @@
                     <td class="p-2">{{ \Carbon\Carbon::parse($campaign->created_at)->format('d/m/Y') }}</td>
                     <td class="p-2"><i class="fa-solid text-xl text-green-500 fa-check"></i></td>
                     <td class="p-2">
-                      <a class="p-2 text-xl text-purple-600" href="#"><i class="fa-solid fa-trash"></i></a>
-                      <a class="p-2 text-xl text-purple-600" href="#"><i class="fa-solid fa-pen"></i></a>
+                      <a href="{{ route('delete.rabbit.campaign', ['id' => $campaign->id]) }}" class="p-2 text-purple-500">
+                            <i class="fa-solid fa-trash text-2xl"></i>
+                        </a>    
+                      <a href="{{ route('edit.rabbit.campaign', ['id' => $campaign->id]) }}" class="p-2 text-purple-500">
+                        <i class="fa-solid fa-pen text-2xl"></i>
+                    </a> 
                       <a class="p-2 text-xl text-purple-600" href="#"><i class="fa-solid fa-eye"></i></i></a>
                     </td>
                 </tr>
