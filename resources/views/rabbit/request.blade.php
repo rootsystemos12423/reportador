@@ -40,14 +40,20 @@
                         'wbraid', 'gbraid', 'xid', 'ref_id', 'created_at', 'updated_at'
                     ];
                 
-                    // Pega os parâmetros de rastreamento, assumindo que estão no primeiro índice do array
-                    $trackingData = collect($request->utms[0])
-                        ->filter(function ($value, $key) use ($utmColumns) {
-                            return in_array($key, $utmColumns) && !empty(trim($value));
-                        });
+                    // Verifica se $request->utms não é nulo, tem dados e se o índice 0 existe
+                    if (isset($request->utms[0]) && !empty($request->utms[0])) {
+                        // Pega os parâmetros de rastreamento, assumindo que estão no primeiro índice do array
+                        $trackingData = collect($request->utms[0])
+                            ->filter(function ($value, $key) use ($utmColumns) {
+                                return in_array($key, $utmColumns) && !empty(trim($value));
+                            });
+                    } else {
+                        // Marca como null quando $request->utms estiver vazio ou nulo
+                        $trackingData = null;
+                    }
                 @endphp
                 
-                @if ($trackingData->isNotEmpty())
+                @if ($trackingData && $trackingData->isNotEmpty())
                     <div class="overflow-x-auto rounded-lg border border-gray-700">
                         <table class="min-w-full divide-y divide-gray-700">
                             <tbody class="bg-gray-800 divide-y divide-gray-700">
@@ -69,6 +75,7 @@
                         Nenhum dado de rastreamento encontrado
                     </div>
                 @endif
+                
                 
                 
                 
