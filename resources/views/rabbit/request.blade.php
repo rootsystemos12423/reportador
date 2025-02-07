@@ -74,11 +74,7 @@
                     <div class="p-4 text-center text-gray-400 border-2 border-dashed border-gray-700 rounded-lg">
                         Nenhum dado de rastreamento encontrado
                     </div>
-                @endif
-                
-                
-                
-                
+                @endif                
                 </div>
                 
             </div>
