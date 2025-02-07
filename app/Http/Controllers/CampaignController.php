@@ -178,35 +178,30 @@ class CampaignController extends Controller
     }
 
     public function campaignEditUpdate(Request $request)
-    {
-        $campaign = Campaign::findOrFail($request->campaign_id);
-    
-        // Logando a campanha que está sendo atualizada
-        Log::info("Iniciando atualização da campanha", ['campaign_id' => $campaign->id, 'name' => $campaign->name]);
-    
-        // Atualiza o nome da campanha, se o campo estiver presente
-        if ($request->name) {
-            $campaign->name = $request->name;
-            Log::info("Nome da campanha atualizado", ['new_name' => $request->name]);
-        }
-    
-        // Verifica se os links foram enviados e atualiza a coluna offer_pages
-        if ($request->has('offer_pages')) {
-            // Logando os links recebidos no request
-            Log::info("Links recebidos para atualização", ['offer_pages' => $request->offer_pages]);
-    
-            // Atualizando os links na campanha
-            $campaign->offer_pages = $request->offer_pages;
-        }
-    
-        // Salva as alterações no banco
+{
+    $campaign = Campaign::findOrFail($request->campaign_id);
+
+    if ($request->name) {
+        $campaign->name = $request->name;
         $campaign->save();
-        
-        // Logando que a campanha foi salva com sucesso
-        Log::info("Campanha atualizada com sucesso", ['campaign_id' => $campaign->id, 'offer_pages' => $campaign->offer_pages]);
-    
-        return redirect()->route('view.rabbit.campaigns')->with('success', 'Campanha Atualizada Com Sucesso');
     }
 
+    if ($request->offer_pages) {
+        // Escapa as barras corretamente ao salvar no formato desejado
+        $encodedLinks = json_encode($request->offer_pages, JSON_UNESCAPED_SLASHES);
+        $campaign->offer_pages = $encodedLinks;
+        $campaign->save();
+    }
+
+    return redirect()->route('view.rabbit.campaigns');
+}
+
+
+public function campaignVizu($id){
+    $campaign = Campaign::findOrFail($id);
+    
+
+    return view('rabbit.campaignVizu', compact('campaign'));
+}
 
 }

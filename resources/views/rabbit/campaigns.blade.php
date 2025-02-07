@@ -111,7 +111,9 @@
                       <a href="{{ route('edit.rabbit.campaign', ['id' => $campaign->id]) }}" class="p-2 text-purple-500">
                         <i class="fa-solid fa-pen text-2xl"></i>
                     </a> 
-                      <a class="p-2 text-xl text-purple-600" href="#"><i class="fa-solid fa-eye"></i></i></a>
+                      <a href="{{ route('vizu.rabbit.campaign', ['id' => $campaign->id]) }}" class="p-2 text-purple-500">
+                        <i class="fa-solid fa-eye text-2xl"></i>
+                    </a> 
                     </td>
                 </tr>
                 @endforeach

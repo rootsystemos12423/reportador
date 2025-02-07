@@ -56,10 +56,12 @@ Route::middleware([
     Route::get('/dashboard/whiterabbit/campaign', [WhiteRabbitController::class, 'campaign'])->name('view.rabbit.campaign');
 
     Route::post('/dashboard/whiterabbit/domain/store', [DomainController::class, 'store'])->name('store.rabbit.domain');
+    Route::get('/dashboard/whiterabbit/domain/delete/{id}', [DomainController::class, 'domainDelete'])->name('delete.rabbit.domain');
     Route::post('/dashboard/whiterabbit/campaign/store', [CampaignController::class, 'store'])->name('store.rabbit.campaign');
     Route::get('/dashboard/whiterabbit/campaign/delete/{id}', [CampaignController::class, 'campaignDelete'])->name('delete.rabbit.campaign');
     Route::get('/dashboard/whiterabbit/campaign/edit/{id}', [CampaignController::class, 'campaignEdit'])->name('edit.rabbit.campaign');
     Route::post('/dashboard/whiterabbit/campaign/edit/update', [CampaignController::class, 'campaignEditUpdate'])->name('update.rabbit.campaign');
+    Route::get('/dashboard/whiterabbit/campaign/view/{id}/detailed', [CampaignController::class, 'campaignVizu'])->name('vizu.rabbit.campaign');
 
 
     Route::get('/dashboard/whiterabbit/request/{id}', [WhiteRabbitController::class, 'RequestShow'])->name('cloacker.rabbit.request.show');

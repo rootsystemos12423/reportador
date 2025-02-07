@@ -11,6 +11,6 @@ class Domain extends Model
 
     public function landingPage()
     {
-        return $this->belongsTo(LandingPage::class);
+        return $this->belongsTo(LandingPage::class)->onDelete('cascade');
     }
 }

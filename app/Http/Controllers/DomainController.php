@@ -25,4 +25,13 @@ class DomainController extends Controller
         'domain' => $domain
     ]);
 }
+
+public function domainDelete($id){
+
+    $domain = Domain::findOrFail($id);
+
+    $domain->delete();
+
+    return redirect()->back()->with('sucess', 'Dominio Deletada Com Sucesso');
+}
 }
