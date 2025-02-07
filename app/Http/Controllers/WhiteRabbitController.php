@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Domain;
 use App\Models\Campaign;
 use App\Models\RequestLog;
+use App\Models\UtmsRequest;
 use Illuminate\Support\Facades\Http;
 use Detection\MobileDetect;
 use App\Models\Rule;
@@ -82,7 +83,9 @@ class WhiteRabbitController extends Controller
         $domain = $request->getHost();
         $safePage = "https://{$domain}/{$id}/safe";
 
-       $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+      // $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+
+        $ip = '177.75.75.230';
 
         $apiUrl = "http://ip-api.com/json/{$ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query";
 
@@ -126,6 +129,23 @@ class WhiteRabbitController extends Controller
             'campaign_id' => $campaign->id,
         ]);
 
+        // ✅ Captura todas as UTMs da URL e salva na tabela `utms_request`
+        $utmParams = [
+            'cwr', 'twr', 'gwr', 'domain', 'cr', 'plc', 'mtx', 'rdn', 'kw', 
+            'cpc', 'disp', 'int', 'loc', 'net', 'pos', 'dev', 'gclid', 'wbraid', 'gbraid', 'xid'
+        ];
+        
+        $utmData = [];
+        foreach ($utmParams as $param) {
+            $utmData[$param] = $request->query($param);
+        }
+
+        UtmsRequest::create(array_merge($utmData, [
+            'request_id' => $requestLog->id,
+            'ref_id' => $request->query('gclid'),
+        ]));
+
+
         if ($detect->is('TV')) {
             $isTV = true;
         }
@@ -159,7 +179,7 @@ class WhiteRabbitController extends Controller
             return redirect()->to($safePage);
         }
 
-        $rule = $this->checkRule($geoData);
+        $rule = $this->checkRule($geoData, $request->userAgent(), $ip);
 
         if ($rule !== null) {
             // Se uma regra foi atendida, atualiza o log com o motivo do bloqueio
@@ -259,7 +279,7 @@ class WhiteRabbitController extends Controller
     return false;
 }
 
-private function checkRule($data)
+private function checkRule($data, $userAgent, $ip)
 {
     $rules = Rule::all();
 
@@ -274,25 +294,25 @@ private function checkRule($data)
                 break;
 
             case 'ip':
-                if (isset($data['ip']) && $this->checkCondition($data['ip'], $rule->condition_operator, $values)) {
+                if (isset($ip) && $this->checkCondition($ip, $rule->condition_operator, $values)) {
                     return $rule;
                 }
                 break;
 
             case 'asn':
-                if (isset($data['asn']) && $this->checkCondition($data['asn'], $rule->condition_operator, $values)) {
+                if (isset($data['asname']) && $this->checkCondition($data['asname'], $rule->condition_operator, $values)) {
                     return $rule;
                 }
                 break;
 
             case 'user-agent':
-                if (isset($data['user_agent']) && $this->checkCondition($data['user_agent'], $rule->condition_operator, $values)) {
+                if (isset($userAgent) && $this->checkCondition($userAgent, $rule->condition_operator, $values)) {
                     return $rule;
                 }
                 break;
 
             case 'reverse-dns':
-                if (isset($data['reverse_dns']) && $this->checkCondition($data['reverse_dns'], $rule->condition_operator, $values)) {
+                if (isset($data['reverse']) && $this->checkCondition($data['reverse'], $rule->condition_operator, $values)) {
                     return $rule;
                 }
                 break;

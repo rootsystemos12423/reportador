@@ -31,14 +31,49 @@
                 <hr class="my-6 border-gray-600">
 
                 <div class="p-4 rounded-lg border border-gray-600 bg-gray-700">
-                    <h2 class="text-xl font-semibold text-gray-300 mb-4">Campanha Relacionada</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div><strong>Nome da Campanha:</strong> <span class="text-gray-400">{{ $request->campaign->name ?? 'N/A' }}</span></div>
-                        <div><strong>Idioma da Campanha:</strong> <span class="text-gray-400">{{ $request->campaign->language ?? 'N/A' }}</span></div>
-                        <div><strong>Códigos de Países Alvo:</strong> <span class="text-gray-400">{{ implode(', ', json_decode($request->campaign->target_countries)) ?? 'N/A' }}</span></div>
-                        <div><strong>Dispositivos Alvo:</strong> <span class="text-gray-400">{{ implode(', ', json_decode($request->campaign->target_devices)) ?? 'N/A' }}</span></div>
+                    <h2 class="text-xl font-semibold text-gray-300 mb-4">Parâmetros de Rastreamento</h2>
+                    @php
+                    // Lista de parâmetros válidos do model
+                    $utmColumns = [
+                        'cwr', 'twr', 'gwr', 'domain', 'cr', 'plc', 'mtx', 'rdn', 'kw',
+                        'cpc', 'disp', 'int', 'loc', 'net', 'pos', 'dev', 'gclid', 
+                        'wbraid', 'gbraid', 'xid', 'ref_id', 'created_at', 'updated_at'
+                    ];
+                
+                    // Pega os parâmetros de rastreamento, assumindo que estão no primeiro índice do array
+                    $trackingData = collect($request->utms[0])
+                        ->filter(function ($value, $key) use ($utmColumns) {
+                            return in_array($key, $utmColumns) && !empty(trim($value));
+                        });
+                @endphp
+                
+                @if ($trackingData->isNotEmpty())
+                    <div class="overflow-x-auto rounded-lg border border-gray-700">
+                        <table class="min-w-full divide-y divide-gray-700">
+                            <tbody class="bg-gray-800 divide-y divide-gray-700">
+                                @foreach ($trackingData as $key => $value)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-purple-300">
+                                            {{ strtoupper(str_replace('_', ' ', $key)) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                            {{ $value }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                @else
+                    <div class="p-4 text-center text-gray-400 border-2 border-dashed border-gray-700 rounded-lg">
+                        Nenhum dado de rastreamento encontrado
+                    </div>
+                @endif
+                
+                
+                
                 </div>
+                
             </div>
         </div>
     </div>

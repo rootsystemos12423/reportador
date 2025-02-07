@@ -80,7 +80,6 @@
         document.body.removeChild(tempInput);
 
         // Optionally, show a message to the user that the text was copied
-        alert('Copied to clipboard!');
     }
 </script>
 @endif

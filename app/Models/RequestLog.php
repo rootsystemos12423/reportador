@@ -30,4 +30,8 @@ class RequestLog extends Model
     {
         return $this->belongsTo(Campaign::class);
     }
+
+    public function utms() {
+        return $this->hasMany(UtmsRequest::class, 'request_id', 'id');
+    }
 }
