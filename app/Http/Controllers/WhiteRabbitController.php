@@ -83,7 +83,7 @@ class WhiteRabbitController extends Controller
         $domain = $request->getHost();
         $safePage = "https://{$domain}/{$id}/safe";
 
-       $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+        $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
 
         $apiUrl = "http://ip-api.com/json/{$ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query";
 
@@ -138,7 +138,7 @@ class WhiteRabbitController extends Controller
             $utmData[$param] = $request->query($param);
         }
 
-        UtmsRequest::create(array_merge($utmData, [
+        $utm = UtmsRequest::create(array_merge($utmData, [
             'request_id' => $requestLog->id,
             'ref_id' => $request->query('gclid'),
         ]));
@@ -230,9 +230,28 @@ class WhiteRabbitController extends Controller
 
         $offerPages = json_decode($campaign->offer_pages, true);
 
+        // Verifica se existe pelo menos uma página de oferta
+        if (!empty($offerPages)) {
+            // Define os parâmetros dinâmicos
+            $queryParams = [
+                'gad_source' => '1',
+                'gclid' => request('gclid'),
+                'ref_id' => request('ref_id'),
+                'wbraid' => request('wbraid'),
+                'gbraid' => request('gbraid'),
+            ];
+
+            // Remove os parâmetros nulos ou vazios
+            $queryParams = array_filter($queryParams);
+
+            // Monta a URL final
+            $unsafePage = $offerPages[0] . '?' . http_build_query($queryParams);
+        }
+
+
         // Verifica se há pelo menos um link válido no array
         if (!empty($offerPages) && is_array($offerPages)) {
-            return redirect()->to($offerPages[0]); // Redireciona para o primeiro link
+            return redirect()->to($unsafePage); // Redireciona para o primeiro link
         }
 
         // Retorna os dados obtidos para debug
