@@ -177,6 +177,15 @@ class WhiteRabbitController extends Controller
             return redirect()->to($safePage);
         }
 
+        if ($campaign->traffic_source === 'G-SEARCH' && $request->query('net') !== 'g') {
+            RequestLog::where('ip', $ip)->latest()->first()->update([
+                'allowed' => false,
+                'reason' => 'Network Not Match With Campaign Type'
+            ]);
+        
+            return redirect()->to($safePage);
+        }
+        
         if($this->checkGoogleBot($ip, $geoData) === true){
 
             RequestLog::where('ip', $ip)->latest()->first()->update([
