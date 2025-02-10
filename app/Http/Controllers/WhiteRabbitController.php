@@ -166,6 +166,17 @@ class WhiteRabbitController extends Controller
             return redirect()->to($safePage);
         }
 
+        if($request->query('gclid') === null){
+
+            RequestLog::where('ip', $ip)->latest()->first()->update([
+                'allowed' => false,
+                'reason' => 'Gclid Null'
+            ]);
+        
+
+            return redirect()->to($safePage);
+        }
+
         if($this->checkGoogleBot($ip, $geoData) === true){
 
             RequestLog::where('ip', $ip)->latest()->first()->update([
