@@ -218,7 +218,7 @@ public function campaignVizu($id){
     $safePage = $requests->pluck('safe_page')->toArray(); 
     $offerPage = $requests->pluck('offer_page')->toArray();
 
-    $requestsFiltered = RequestLog::where('campaign_id', $campaign->id)->orderBy('date', 'asc')->paginate(10);
+    $requestsFiltered = RequestLog::where('campaign_id', $campaign->id)->orderBy('created_at', 'asc')->paginate(10);
 
     return view('rabbit.campaignVizu', compact('campaign', 'dates', 'totalRequests', 'safePage', 'offerPage', 'requestsFiltered'));
 }
