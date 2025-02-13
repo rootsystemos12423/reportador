@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Illuminate\Support\Facades\Log;
+use App\Models\RequestLog;
+
 
 class CampaignController extends Controller
 {
@@ -198,10 +200,27 @@ class CampaignController extends Controller
 
 
 public function campaignVizu($id){
+
     $campaign = Campaign::findOrFail($id);
     
+    // Consultar os dados de requests dos últimos 15 dias agrupados por data
+    $requests = RequestLog::where('campaign_id', $campaign->id)->selectRaw('DATE(created_at) as date, count(*) as total_requests, 
+            sum(CASE WHEN allowed = 0 THEN 1 ELSE 0 END) as safe_page,
+            sum(CASE WHEN allowed = 1 THEN 1 ELSE 0 END) as offer_page') // Corrigido aqui
+        ->where('created_at', '>=', now()->subDays(15)) // Filtra os últimos 15 dias
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
 
-    return view('rabbit.campaignVizu', compact('campaign'));
+    // Organize os dados para passar para a view
+    $dates = $requests->pluck('date')->toArray();
+    $totalRequests = $requests->pluck('total_requests')->toArray();
+    $safePage = $requests->pluck('safe_page')->toArray(); 
+    $offerPage = $requests->pluck('offer_page')->toArray();
+
+    $requestsFiltered = RequestLog::where('campaign_id', $campaign->id)->paginate(10);
+
+    return view('rabbit.campaignVizu', compact('campaign', 'dates', 'totalRequests', 'safePage', 'offerPage', 'requestsFiltered'));
 }
 
 }
