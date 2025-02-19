@@ -83,7 +83,7 @@ class WhiteRabbitController extends Controller
         $domain = $request->getHost();
         $safePage = "https://{$domain}/{$id}/safe";
 
-        $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+       $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
 
         $apiUrl = "http://ip-api.com/json/{$ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query";
 
@@ -149,7 +149,7 @@ class WhiteRabbitController extends Controller
         }
 
         if (!$request->has('xid')) {
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Missing xId'
             ]);
@@ -158,7 +158,7 @@ class WhiteRabbitController extends Controller
         }
 
         if ($xid !== $campaign->xid) {
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Xid Invalid'
             ]);
@@ -168,7 +168,7 @@ class WhiteRabbitController extends Controller
 
         if($request->query('gclid') === null){
 
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Gclid Null'
             ]);
@@ -178,7 +178,7 @@ class WhiteRabbitController extends Controller
         }
 
         if ($campaign->traffic_source === 'G-SEARCH' && $request->query('net') !== 'g') {
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Network Not Match With Campaign Type'
             ]);
@@ -188,7 +188,7 @@ class WhiteRabbitController extends Controller
         
         if($this->checkGoogleBot($ip, $geoData) === true){
 
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Google Bot Detected'
             ]);
@@ -201,7 +201,7 @@ class WhiteRabbitController extends Controller
 
         if ($rule !== null) {
             // Se uma regra foi atendida, atualiza o log com o motivo do bloqueio
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Bloqueado por Regra Privada (Condition Type da Regra: ' . $rule->condition_type . ')'
             ]);
@@ -211,7 +211,7 @@ class WhiteRabbitController extends Controller
 
         if (!in_array($geoData['countryCode'], $targetCountriesArray)) {
 
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Country Not Allowed'
             ]);
@@ -221,7 +221,7 @@ class WhiteRabbitController extends Controller
 
         if ($campaign->language !== $userLanguage) {
 
-            RequestLog::where('ip', $ip)->latest()->first()->update([
+            $requestLog->update([
                 'allowed' => false,
                 'reason' => 'Language Not Allowed'
             ]);
@@ -234,7 +234,7 @@ class WhiteRabbitController extends Controller
             ($isTablet && !in_array('TAB', $targetDevices)) ||
             ($isTV && !in_array('TV', $targetDevices))) {
 
-                RequestLog::where('ip', $ip)->latest()->first()->update([
+                $requestLog->update([
                     'allowed' => false,
                     'reason' => 'Device Not Allowed'
                 ]);
@@ -243,7 +243,7 @@ class WhiteRabbitController extends Controller
 
         }
 
-        RequestLog::where('ip', $ip)->latest()->first()->update([
+        $requestLog->update([
             'allowed' => true,
             'reason' => 'Acess Granted'
         ]);
