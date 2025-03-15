@@ -83,7 +83,12 @@ class WhiteRabbitController extends Controller
         $domain = $request->getHost();
         $safePage = "https://{$domain}/{$id}/safe";
 
-       $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+       // $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+
+       $ip = '191.57.29.209';
+
+
+       dd($referer = request()->header('referer'));
 
         $apiUrl = "http://ip-api.com/json/{$ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query";
 
@@ -125,6 +130,7 @@ class WhiteRabbitController extends Controller
             'allowed' => null,
             'reason' => null,
             'campaign_id' => $campaign->id,
+            'referer' => request()->header('referer'),
         ]);
 
         // ✅ Captura todas as UTMs da URL e salva na tabela `utms_request`

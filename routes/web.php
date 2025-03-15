@@ -20,9 +20,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+     /*
 
     Route::get('/dashboard/site-check', [SiteController::class, 'show'])->name('sitecheck');
     Route::post('/site/store', [SiteController::class, 'store'])->name('site.store');
@@ -46,6 +44,7 @@ Route::middleware([
     Route::delete('/landing-pages/{id}', [LandingPageController::class, 'destroy'])->name('landingPages.destroy');
     Route::post('/shopify/{id}/store', [LandingPageController::class, 'storeShopifyLanding'])->name('shopify.store');
 
+    */
 
     // WHITE RABBIT
 
