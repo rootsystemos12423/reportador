@@ -22,8 +22,8 @@
                 <img class="w-32" src="/images/logo_nome_light_2.png">
             </div>            
             <nav class="mt-4 space-y-2">
-                <a href="{{ route('view.rabbit') }}" 
-                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                <a href="{{ route('dashboard') }}" 
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('dashboard')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
                     <i class="fas fa-home text-xl text-gray-300"></i>
                     <span>Dashboard</span>
                 </a>

@@ -37,7 +37,7 @@
                     </a>
 
                      <!-- Box White Rabbit -->
-                <a href="{{ route('view.rabbit') }}"
+                <a href="{{ route('dashboard') }}"
                      class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105">
                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-3">
                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 4h.01M4.5 12a7.5 7.5 0 0115 0 7.5 7.5 0 01-15 0z" />
