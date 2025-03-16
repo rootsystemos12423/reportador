@@ -25,7 +25,7 @@
                         <div><strong>User Agent:</strong> <span class="text-gray-400">{{ $request->user_agent ?? 'N/A' }}</span></div>
                         <div><strong>Permissão:</strong> <span class="text-gray-400">{{ $request->allowed ? 'Permitido' : 'Não Permitido' }}</span></div>
                         <div><strong>Motivo:</strong> <span class="text-gray-400">{{ $request->reason ?? 'N/A' }}</span></div>
-                        <div><strong>Referrer:</strong> <span class="text-gray-400">{{ $request->referrer ?? 'N/A' }}</span></div>
+                        <div><strong>Referrer:</strong> <span class="text-gray-400">{{ $request->referer ?? 'N/A' }}</span></div>
                     </div>
                 </div>
 

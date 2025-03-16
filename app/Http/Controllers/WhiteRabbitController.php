@@ -83,7 +83,7 @@ class WhiteRabbitController extends Controller
         $domain = $request->getHost();
         $safePage = "https://{$domain}/{$id}/safe";
 
-       $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
+        $ip = $request->header('CF-Connecting-IP') ?? $request->ip();
 
         $apiUrl = "http://ip-api.com/json/{$ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query";
 
