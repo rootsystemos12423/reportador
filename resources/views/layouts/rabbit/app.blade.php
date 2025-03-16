@@ -14,46 +14,49 @@
      @livewireStyles
 
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-[#1e1625] text-white">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-purple-900 p-4 flex flex-col fixed top-0 left-0 h-screen overflow-y-auto">
-            <h1 class="text-xl font-bold text-white">WHITE RABBIT</h1>
-            
+        <aside class="w-64 bg-[#280037] p-4 flex flex-col fixed top-0 left-0 h-screen overflow-y-auto">
+            <div class="w-full flex justify-center">
+                <img class="w-32" src="/images/logo_nome_light_2.png">
+            </div>            
             <nav class="mt-4 space-y-2">
                 <a href="{{ route('view.rabbit') }}" 
-                   class="flex items-center p-2 @if(request()->routeIs('view.rabbit')) bg-purple-700 @else hover:bg-purple-700 @endif rounded">
-                   Dashboard
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                    <i class="fas fa-home text-xl text-gray-300"></i>
+                    <span>Dashboard</span>
                 </a>
-                
+            
                 <a href="{{ route('view.rabbit.domains') }}" 
-                   class="flex items-center p-2 @if(request()->routeIs('view.rabbit.domains')) bg-purple-700 @else hover:bg-purple-700 @endif rounded">
-                   Domains
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit.domains')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                    <i class="fas fa-globe text-xl text-gray-300"></i>
+                    <span>Domains</span>
                 </a>
-                
+            
                 <a href="{{ route('view.rabbit.campaigns') }}" 
-                   class="flex items-center p-2 @if(request()->routeIs('view.rabbit.campaigns')) bg-purple-700 @else hover:bg-purple-700 @endif rounded">
-                   Campaigns
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit.campaigns')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                    <i class="fas fa-bullhorn text-xl text-gray-300"></i>
+                    <span>Campaigns</span>
                 </a>
-                
+            
                 <a href="{{ route('view.rabbit.requests') }}" 
-                   class="flex items-center p-2 @if(request()->routeIs('view.rabbit.requests')) bg-purple-700 @else hover:bg-purple-700 @endif rounded">
-                   Requests
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit.requests')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                    <i class="fas fa-file-alt text-xl text-gray-300"></i>
+                    <span>Requests</span>
                 </a>
-
+            
                 <a href="{{ route('view.rabbit.rules') }}" 
-                   class="flex items-center p-2 @if(request()->routeIs('view.rabbit.rules')) bg-purple-700 @else hover:bg-purple-700 @endif rounded">
-                   Regras
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit.rules')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                    <i class="fas fa-shield-alt text-xl text-gray-300"></i>
+                    <span>Regras</span>
                 </a>
             </nav>
+            
+            
+            
+            
         
-            <div class="mt-auto p-4 bg-purple-700 rounded text-center">
-                <p class="text-sm">PRO Plan</p>
-                <p class="text-xs">Due date: 27/02/2025</p>
-                <div class="w-full bg-gray-800 h-2 rounded mt-1">
-                    <div class="bg-pink-500 h-2 rounded" style="width: 1%;"></div>
-                </div>
-            </div>
         </aside>
         
         <main class="flex-1 p-6 ml-64">
@@ -99,25 +102,25 @@
                             <div class="mt-4">
                                 <label for="domain" class="text-lg">Domain</label>
                                 <input type="text" name="domain" id="domain" x-model="domain" placeholder="example: https://www.domain.com"
-                                class="w-full mt-2 p-3 rounded-md bg-gray-800 border border-gray-600 text-white">                            
+                                class="w-full mt-2 p-3 rounded-md bg-zinc-800 border border-gray-600 text-white">                            
                                 
                                 <small class="block mt-1 text-gray-400">Add and verify the domains.</small>
                 
                                 <!-- Informações adicionais -->
                                 <div class="mt-4 space-y-3">
-                                    <div class="bg-gray-700 p-3 rounded-lg">
+                                    <div class="bg-zinc-700 p-3 rounded-lg">
                                         <p>1: Point your domain to Cloudflare nameservers.</p>
                                     </div>
-                                    <div class="bg-gray-700 p-3 rounded-lg">
+                                    <div class="bg-zinc-700 p-3 rounded-lg">
                                         <p>2: Visit your domain's DNS records panel on Cloudflare.</p>
                                     </div>
-                                    <div class="bg-gray-700 p-3 rounded-lg">
+                                    <div class="bg-zinc-700 p-3 rounded-lg">
                                         <p>3: Create a A record with the value:</p>
                                         <span class="bg-gray-600 p-1 rounded">@</span>
                                         <p class="mt-1">Pointing to:</p>
-                                        <strong class="cursor-pointer text-pink-400">185.208.156.232</strong>
+                                        <strong class="cursor-pointer text-pink-400">{{ env('IP_URL') }}</strong>
                                     </div>
-                                    <div class="bg-gray-700 p-3 rounded-lg">
+                                    <div class="bg-zinc-700 p-3 rounded-lg">
                                         <p>4: Save the DNS</p>
                                     </div>
                                 </div>

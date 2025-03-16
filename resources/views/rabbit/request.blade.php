@@ -4,11 +4,11 @@
 
 @section('content')
     <div class="container mx-auto py-8">
-        <div class="p-8 rounded-lg shadow-xl border border-gray-700 bg-gray-800 text-white">
+        <div class="p-8 rounded-lg shadow-xl border border-gray-700 bg-zinc-800 text-white">
             <h1 class="text-3xl font-semibold text-gray-100 mb-6">Detalhes da Requisição #{{ $request->id }}</h1>
 
             <div class="space-y-6">
-                <div class="p-4 rounded-lg border border-gray-600 bg-gray-700">
+                <div class="p-4 rounded-lg border border-gray-600 bg-zinc-700">
                     <h2 class="text-xl font-semibold text-gray-300 mb-4">Informações da Requisição</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div><strong>IP:</strong> <span class="text-gray-400">{{ $request->ip }}</span></div>
@@ -31,7 +31,7 @@
 
                 <hr class="my-6 border-gray-600">
 
-                <div class="p-4 rounded-lg border border-gray-600 bg-gray-700">
+                <div class="p-4 rounded-lg border border-gray-600 bg-zinc-700">
                     <h2 class="text-xl font-semibold text-gray-300 mb-4">Parâmetros de Rastreamento</h2>
                     @php
                     // Lista de parâmetros válidos do model
@@ -57,7 +57,7 @@
                 @if ($trackingData && $trackingData->isNotEmpty())
                     <div class="overflow-x-auto rounded-lg border border-gray-700">
                         <table class="min-w-full divide-y divide-gray-700">
-                            <tbody class="bg-gray-800 divide-y divide-gray-700">
+                            <tbody class="bg-zinc-800 divide-y divide-gray-700">
                                 @foreach ($trackingData as $key => $value)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-purple-300">

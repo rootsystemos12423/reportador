@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Main Content -->
-<div class="mt-6 bg-gray-800 p-4 rounded-lg">
+<div class="mt-6 bg-zinc-800 p-4 rounded-lg">
     <table class="w-full text-left">
         <thead>
             <tr class="border-b border-gray-700">

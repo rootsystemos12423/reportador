@@ -7,17 +7,17 @@
 
 <!-- Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-6">
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105">
+    <div class="bg-zinc-800 p-6 rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105">
         <i class="fas fa-chart-line text-pink-400 text-3xl"></i>
         <p class="text-pink-400 font-semibold mt-2">Total Requests</p>
         <p class="text-3xl font-bold">{{ array_sum($totalRequests) }}</p>
     </div>
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105">
+    <div class="bg-zinc-800 p-6 rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105">
         <i class="fas fa-shield-alt text-purple-400 text-3xl"></i>
         <p class="text-purple-400 font-semibold mt-2">Safe Page</p>
         <p class="text-3xl font-bold">{{ array_sum($safePage) }}</p>
     </div>
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105">
+    <div class="bg-zinc-800 p-6 rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105">
         <i class="fas fa-file-invoice text-blue-400 text-3xl"></i>
         <p class="text-blue-400 font-semibold mt-2">Offer Page</p>
         <p class="text-3xl font-bold">{{ array_sum($offerPage) }}</p>
@@ -25,7 +25,7 @@
 </div>
 
 <!-- Chart -->
-<div class="bg-gray-900 mt-8 rounded-lg shadow-lg overflow-hidden p-6">
+<div class="bg-zinc-900 mt-8 rounded-lg shadow-lg overflow-hidden p-6">
     <h2 class="text-xl text-white font-semibold mb-4">Traffic Analytics</h2>
     <div id="chart" class="w-full h-[500px]"></div>
 </div>
@@ -34,7 +34,7 @@
     var chart = echarts.init(document.getElementById('chart'));
 
     var options = {
-        backgroundColor: '#1f2937',
+        backgroundColor: '#2c2c2e',
         textStyle: { color: '#ffffff' },
         tooltip: { trigger: 'axis' },
         legend: {

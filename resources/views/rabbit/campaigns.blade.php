@@ -34,7 +34,7 @@
                 <!-- Informações adicionais -->
                 <div class="mt-4 space-y-3">
                     <!-- URL -->
-                    <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+                    <div class="bg-zinc-700 p-4 rounded-lg flex justify-between items-center">
                         <p class="flex-1 text-sm overflow-hidden text-ellipsis" title="{{ $campaignCreated->domain->domain }}/{{ $campaignCreated->hash }}">
                             {{ $campaignCreated->domain->domain }}/{{ $campaignCreated->hash }}
                         </p>
@@ -43,7 +43,7 @@
                         </button>
                     </div>
                     <!-- URL Parameters -->
-                    <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+                    <div class="bg-zinc-700 p-4 rounded-lg flex justify-between items-center">
                         <p class="flex-1 text-sm overflow-hidden text-ellipsis" title="{lpurl}&cwr={campaignid}&twr={targetid}&gwr={adgroupid}&domain={domain}&cr={creative}&plc={placement}&mtx={matchtype}&rdn={random}&kw={keyword}&cpc={ifsearch:cpc}&disp={ifcontent:display}&int={loc_interest_ms}&loc={loc_physical_ms}&net={network}&pos={adposition}&dev={device}&gclid={gclid}&wbraid={wbraid}&gbraid={gbraid}&ref_id={gclid}&xid={{ $campaignCreated->xid }}">
                             {lpurl}&cwr={campaignid}&twr={targetid}&gwr={adgroupid}&domain={domain}&cr={creative}&plc={placement}&mtx={matchtype}&rdn={random}&kw={keyword}&cpc={ifsearch:cpc}&disp={ifcontent:display}&int={loc_interest_ms}&loc={loc_physical_ms}&net={network}&pos={adposition}&dev={device}&gclid={gclid}&wbraid={wbraid}&gbraid={gbraid}&ref_id={gclid}&xid={{ $campaignCreated->xid }}
                         </p>
@@ -84,7 +84,7 @@
 </script>
 @endif
 
-     <div class="mt-6 bg-gray-800 p-4 rounded-lg">
+     <div class="mt-6 bg-zinc-800 p-4 rounded-lg">
          <table class="w-full text-left">
              <thead>
                  <tr class="border-b border-gray-700">
