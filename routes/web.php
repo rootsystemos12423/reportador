@@ -48,7 +48,7 @@ Route::middleware([
 
     // WHITE RABBIT
 
-    Route::get('/dashboard/whiterabbit', [WhiteRabbitController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [WhiteRabbitController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/whiterabbit/domains', [WhiteRabbitController::class, 'domains'])->name('view.rabbit.domains');
     Route::get('/dashboard/whiterabbit/campaigns', [WhiteRabbitController::class, 'campaigns'])->name('view.rabbit.campaigns');
     Route::get('/dashboard/whiterabbit/requests', [WhiteRabbitController::class, 'requests'])->name('view.rabbit.requests');
