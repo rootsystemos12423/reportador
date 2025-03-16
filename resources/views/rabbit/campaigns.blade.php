@@ -62,7 +62,7 @@
         let text = '';
         
         if (type === 'url') {
-            text = '{{ $campaignCreated->domain->domain }}/{{ $campaignCreated->hash }}';
+            text = '{{ rtrim($campaignCreated->domain->domain, '/').'/'.$campaignCreated->hash }}';
         } else if (type === 'params') {
             text = '{lpurl}&cwr={campaignid}&twr={targetid}&gwr={adgroupid}&domain={domain}&cr={creative}&plc={placement}&mtx={matchtype}&rdn={random}&kw={keyword}&cpc={ifsearch:cpc}&disp={ifcontent:display}&int={loc_interest_ms}&loc={loc_physical_ms}&net={network}&pos={adposition}&dev={device}&gclid={gclid}&wbraid={wbraid}&gbraid={gbraid}&ref_id={gclid}&xid={{ $campaignCreated->xid }}';
         }
