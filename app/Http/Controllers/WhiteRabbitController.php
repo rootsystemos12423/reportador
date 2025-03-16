@@ -254,20 +254,32 @@ class WhiteRabbitController extends Controller
         // Verifica se existe pelo menos uma página de oferta
         if (!empty($offerPages)) {
             // Define os parâmetros dinâmicos
-            $queryParams = [
+            $queryParams = array_filter([
                 'gad_source' => '1',
                 'gclid' => request('gclid'),
                 'ref_id' => request('ref_id'),
                 'wbraid' => request('wbraid'),
                 'gbraid' => request('gbraid'),
-            ];
-
-            // Remove os parâmetros nulos ou vazios
-            $queryParams = array_filter($queryParams);
-
-            // Monta a URL final
+            ]);
+        
+            // Filtra os parâmetros UTM para remover valores vazios
+            $utmsCustom = array_filter([
+                'utm_source' => request('utm_source'),
+                'utm_medium' => request('utm_medium'),
+                'utm_campaign' => request('utm_campaign'),
+                'utm_content' => request('utm_content'),
+                'utm_term' => request('utm_term'),
+            ]);
+        
+            // Monta a URL base com os parâmetros principais
             $unsafePage = $offerPages[0] . '?' . http_build_query($queryParams);
+        
+            // Se houver parâmetros UTM, concatena na URL
+            if (!empty($utmsCustom)) {
+                $unsafePage .= '&' . http_build_query($utmsCustom);
+            }
         }
+        
 
 
         // Verifica se há pelo menos um link válido no array
