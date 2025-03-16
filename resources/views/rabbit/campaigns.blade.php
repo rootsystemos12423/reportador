@@ -36,7 +36,7 @@
                     <!-- URL -->
                     <div class="bg-zinc-700 p-4 rounded-lg flex justify-between items-center">
                         <p class="flex-1 text-sm overflow-hidden text-ellipsis" title="{{ $campaignCreated->domain->domain }}/{{ $campaignCreated->hash }}">
-                            {{ $campaignCreated->domain->domain }}/{{ $campaignCreated->hash }}
+                            {{ rtrim($campaignCreated->domain->domain, '/').'/'.$campaignCreated->hash }}
                         </p>
                         <button class="text-purple-500" onclick="copyText('url')">
                             <i class="fa-regular fa-copy text-2xl"></i>
