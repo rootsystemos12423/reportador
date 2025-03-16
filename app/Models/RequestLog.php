@@ -24,6 +24,7 @@ class RequestLog extends Model
         'allowed',
         'reason',
         'campaign_id',
+        'referer',
     ];
 
     public function campaign()
