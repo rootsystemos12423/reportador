@@ -51,6 +51,12 @@
                     <i class="fas fa-shield-alt text-xl text-gray-300"></i>
                     <span>Regras</span>
                 </a>
+
+                <a href="{{ route('view.rabbit.referers') }}" 
+                   class="flex gap-8 items-center p-2 space-x-2 @if(request()->routeIs('view.rabbit.referers')) bg-gray-300 bg-opacity-20 @else hover:bg-gray-300 hover:bg-opacity-20 @endif rounded">
+                    <i class="fa-solid fa-forward text-xl text-gray-300"></i>
+                    <span>Referers</span>
+                </a>
             </nav>
             
             

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Http;
 use Detection\MobileDetect;
 use App\Models\Rule;
 use Illuminate\Support\Facades\Log;
+use App\Models\AllowedReferer;
+
 
 class WhiteRabbitController extends Controller
 {
@@ -186,7 +188,27 @@ class WhiteRabbitController extends Controller
         
             return redirect()->to($safePage);
         }
-        
+
+        if(request()->header('referer') === null && !str_contains($request->userAgent(), 'SamsungBrowser') || request()->header('referer') !== null && str_contains($request->userAgent(), 'SamsungBrowser')) {
+            $requestLog->update([
+                'allowed' => false,
+                'reason' => 'Referer Not Valid'
+            ]);
+            return redirect()->to($safePage);
+        }
+
+        $allowedReferer = AllowedReferer::where('referer', request()->header('referer'))->where('campaign_type', $campaign->traffic_source)->first();
+
+        if (!$allowedReferer) {
+            $requestLog->update([
+                'allowed' => false,
+                'reason' => 'Referer Not Valid'
+            ]);
+            return redirect()->to($safePage);
+        }
+
+
+
         if($this->checkGoogleBot($ip, $geoData) === true){
 
             $requestLog->update([
@@ -517,8 +539,37 @@ public function storeRule(Request $request)
     }
 }
 
+    public function referers(){
+        
+        $referers = AllowedReferer::paginate(10);
 
+        return view('rabbit.referer', compact('referers'));
+    }
 
+    public function Referersstore(Request $request)
+    {
+        // Validação dos dados
+        $request->validate([
+            'condition_type' => 'required|string',
+            'values' => 'required|json',
+        ]);
+
+        // Decodifica os valores (que foram enviados como JSON)
+        $values = json_decode($request->input('values'), true);
+
+        // Salva cada referer no banco de dados
+        foreach ($values as $value) {
+            AllowedReferer::create([
+                'referer' => $value,
+                'campaign_type' => $request->input('condition_type'),
+            ]);
+        }
+
+        // Redireciona de volta com mensagem de sucesso
+        return redirect()
+            ->back()
+            ->with('success', 'Referers adicionados com sucesso!');
+    }
 
 
 }

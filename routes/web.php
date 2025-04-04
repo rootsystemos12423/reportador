@@ -67,6 +67,10 @@ Route::middleware([
 
     Route::get('/dashboard/whiterabbit/rules', [WhiteRabbitController::class, 'rules'])->name('view.rabbit.rules');
     Route::post('/dashboard/whiterabbit/rules/store', [WhiteRabbitController::class, 'storeRule'])->name('store.rabbit.rules');
+
+    Route::get('/dashboard/whiterabbit/referers', [WhiteRabbitController::class, 'referers'])->name('view.rabbit.referers');
+    Route::post('/dashboard/whiterabbit/referers/add', [WhiteRabbitController::class, 'Referersstore'])->name('allowed-referers.store');
+
 });
 
 
