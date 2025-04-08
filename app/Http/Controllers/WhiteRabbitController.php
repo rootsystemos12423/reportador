@@ -291,6 +291,13 @@ class WhiteRabbitController extends Controller
                 'utm_campaign' => request('utm_campaign'),
                 'utm_content' => request('utm_content'),
                 'utm_term' => request('utm_term'),
+                'keyword' => request('keyword'),
+                'device' => request('device'),
+                'network' => request('network'),
+                'placement' => request('placement'),
+                'creative' => request('creative'),
+                'adgroupid' => request('adgroupid'),
+                'campaignid' => request('campaignid'),
             ]);
         
             // Monta a URL base com os parâmetros principais
